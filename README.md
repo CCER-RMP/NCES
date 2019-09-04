@@ -6,7 +6,7 @@ archival files into the more convenient format of the
 [School Locator](https://nces.ed.gov/ccd/schoolsearch/) tool, with some
 helpful tweaks/additions (namely, latitude and longitude fields)
 
-`:warning:` This is a WIP! `:warning:` 
+:warning: This is a WIP! :warning:
 
 # Requirements
 
