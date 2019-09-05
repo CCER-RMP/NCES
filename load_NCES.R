@@ -18,6 +18,23 @@ if (nchar(Sys.getenv("SPARK_HOME")) < 1) {
 library(SparkR, lib.loc = c(file.path(Sys.getenv("SPARK_HOME"), "R", "lib")))
 library(readxl)
 
+
+writeSparkTSV <- function(df, path) {
+    # the key to correctly outputting NA values as unquoted empty strings is to use the "emptyValue" option
+    # See https://spark.apache.org/docs/2.4.0/sql-migration-guide-upgrade.html
+    # "To restore the previous behavior, set the CSV option emptyValue to empty (not quoted) string."
+    write.df(df
+        ,path = path
+        ,source = "csv"
+        ,mode = "overwrite"
+        ,sep="\t"
+        ,quote=""
+        ,null_value = NA
+        ,header = TRUE
+        ,"emptyValue" = "")
+}
+
+
 sparkR.session(master = "local[8]", sparkConfig = list(spark.driver.memory = "2g"))
 
 input_dir <- "C:/Users/jchiu/NCES/input"
@@ -789,11 +806,6 @@ final <- sql("
         ON T.LocaleCode = lc.LocaleCode
  ")
 
-# TODO: this outputs nulls as quoted empty strings (e.g. ""); figure out how to get regular empty string instead
-write.df(final, path = "output", source = "csv", mode = "overwrite", sep="\t", quote="", null_value = NA, header = TRUE, "treatEmptyValuesAsNulls" = "true")
-
-#write.df(final, path = "output", source = "text", mode = "overwrite", sep="\t", quote="", null_value = "", header = TRUE, "treatEmptyValuesAsNulls" = "true")
-
-#write.df(final, path = "output", source = "csv", mode = "overwrite", header = TRUE, "treatEmptyValuesAsNulls" = "true")
+writeSparkTSV(final, "output")
 
 sparkR.session.stop()
