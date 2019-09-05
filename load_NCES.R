@@ -706,7 +706,7 @@ schools_2015_onwards <- sql("
         LEFT JOIN free_lunch free
          	ON d.SCHOOL_YEAR = free.SCHOOL_YEAR
         	AND d.NCESSCH = free.NCESSCH
-        LEFT JOIN free_lunch reduced
+        LEFT JOIN reduced_lunch reduced
          	ON d.SCHOOL_YEAR = reduced.SCHOOL_YEAR
         	AND d.NCESSCH = reduced.NCESSCH
         LEFT JOIN geocode g
