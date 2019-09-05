@@ -26,10 +26,13 @@ writeToTsv <- function(filename, df) {
 input_dir <- "C:/Users/jchiu/NCES/input"
 
 urls <- c(
-	# from 2015 to 2017, there are 5 files in common core, and a separate geocode file
+	# from 2015 to 2018, there are 5 files in common core, and a separate geocode file
 
-	# 2017 common core
-	"https://nces.ed.gov/ccd/Data/zip/ccd_sch_029_1617_w_1a_11212017_csv.zip"
+	# 2018 preliminary
+	"https://nces.ed.gov/ccd/Data/zip/ccd_sch_029_1718_w_0a_03302018_csv.zip"
+
+	# 2017
+	,"https://nces.ed.gov/ccd/Data/zip/ccd_sch_029_1617_w_1a_11212017_csv.zip"
 	,"https://nces.ed.gov/ccd/Data/zip/ccd_SCH_052_1617_l_2a_11212017_CSV.zip"
 	,"https://nces.ed.gov/ccd/Data/zip/ccd_sch_059_1617_l_2a_11212017_csv.zip"
 	,"https://nces.ed.gov/ccd/Data/zip/ccd_sch_129_1617_w_1a_11212017_csv.zip"

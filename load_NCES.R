@@ -463,6 +463,10 @@ createOrReplaceTempView(
 
 #### directory file
 
+# 2018 is preliminary
+createOrReplaceTempView(
+    read.df(paste(input_dir, "ccd_sch_029_1718_w_0a_03302018.csv", sep="/"), source="csv", "header"= "true")
+    ,"directory2018")
 createOrReplaceTempView(
     read.df(paste(input_dir, "ccd_sch_029_1617_w_1a_11212017.csv", sep="/"), source="csv", "header"= "true")
     ,"directory2017")
@@ -474,6 +478,25 @@ createOrReplaceTempView(
     ,"directory2015")
 
 directory <- sql("
+    SELECT 
+        SCHOOL_YEAR
+        ,NCESSCH
+        ,ST_SCHID
+        ,LEAID
+        ,ST_LEAID
+        ,GSLO
+        ,GSHI
+        ,SCH_NAME
+        ,LEA_NAME
+        ,LSTREET1
+        ,LCITY
+        ,LSTATE
+        ,LZIP
+        ,LZIP4
+        ,PHONE
+        ,CHARTER_TEXT
+    FROM directory2018
+    UNION ALL
     SELECT 
         SCHOOL_YEAR
         ,NCESSCH
@@ -759,7 +782,14 @@ geocode <- sql("
 createOrReplaceTempView(geocode, "geocode")
 
 schools_2015_onwards <- sql("
-    WITH T AS (
+    WITH directoryModified as (
+        SELECT
+            *
+            -- use 2017 when joining for the 2018 data, since other tables aren't available yet
+            ,CASE WHEN SCHOOL_YEAR = '2017-2018' THEN '2016-2017' ELSE SCHOOL_YEAR END AS SCHOOL_YEAR_FOR_JOIN
+        FROM directory 
+    )
+    ,T AS (
         SELECT
           	d.SCHOOL_YEAR AS AcademicYear
             ,d.NCESSCH AS NCESSchoolID
@@ -809,24 +839,24 @@ schools_2015_onwards <- sql("
             -- additional fields not in School Locator format
             ,g.LAT As Latitude
             ,g.LON as Longitude
-        FROM directory d
+        FROM directoryModified d
         LEFT JOIN characteristics c
-            ON d.SCHOOL_YEAR = c.SCHOOL_YEAR
+            ON d.SCHOOL_YEAR_FOR_JOIN = c.SCHOOL_YEAR
             AND d.NCESSCH = c.NCESSCH
         LEFT JOIN staff s
-         	ON d.SCHOOL_YEAR = s.SCHOOL_YEAR
+         	ON d.SCHOOL_YEAR_FOR_JOIN = s.SCHOOL_YEAR
         	AND d.NCESSCH = s.NCESSCH
         LEFT JOIN membership m
-         	ON d.SCHOOL_YEAR = m.SCHOOL_YEAR
+         	ON d.SCHOOL_YEAR_FOR_JOIN = m.SCHOOL_YEAR
         	AND d.NCESSCH = m.NCESSCH
         LEFT JOIN free_lunch free
-         	ON d.SCHOOL_YEAR = free.SCHOOL_YEAR
+         	ON d.SCHOOL_YEAR_FOR_JOIN = free.SCHOOL_YEAR
         	AND d.NCESSCH = free.NCESSCH
         LEFT JOIN reduced_lunch reduced
-         	ON d.SCHOOL_YEAR = reduced.SCHOOL_YEAR
+         	ON d.SCHOOL_YEAR_FOR_JOIN = reduced.SCHOOL_YEAR
         	AND d.NCESSCH = reduced.NCESSCH
         LEFT JOIN geocode g
-         	ON d.SCHOOL_YEAR = g.SCHOOLYEAR
+         	ON d.SCHOOL_YEAR_FOR_JOIN = g.SCHOOLYEAR
          	AND d.NCESSCH = g.NCESSCH
     )
     SELECT 
