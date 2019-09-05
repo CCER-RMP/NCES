@@ -31,7 +31,7 @@ Function Get-NCESData {
 
 Function Import-NCESData {
     # TODO: this only works if you've imported RMP module; should replace these fn calls with calls to bcp
-    $files = Get-ChildItem output -Filter *.csv
+    $files = Get-ChildItem output\NCESSchools -Filter *.csv
     $first = $true
     $files | ForEach-Object {
         $file =  $_.FullName

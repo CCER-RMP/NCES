@@ -952,6 +952,6 @@ final <- sql("
         ON T.LocaleCode = lc.LocaleCode
  ")
 
-writeSparkTSV(final, "output")
+writeSparkTSV(final, "output/NCESSchools")
 
 sparkR.session.stop()
