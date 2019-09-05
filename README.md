@@ -11,9 +11,10 @@ helpful tweaks/additions (namely, latitude and longitude fields)
 # Requirements
 
 - Windows 10 and PowerShell
-- Apache Spark 
+- R 3.4.4
+- Apache Spark (instructions below)
 
-# Install
+# Installing Spark
 
 - Download `spark-2.4.3-bin-hadoop2.7.tgz`
 - Unpack it to your home dir: e.g. `C:/Users/jchiu/spark-2.4.3-bin-hadoop2.7`
