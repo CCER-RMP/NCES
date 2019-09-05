@@ -99,10 +99,26 @@ schools_2008_2014 <- sql("
             ,LZIP4 AS ZIP4
             ,PHONE AS Phone
             ,ULOCAL AS LocaleCode
-            ,CASE WHEN CHARTR = '1' THEN 'Yes' ELSE 'No' END AS Charter
-            ,CASE WHEN MAGNET = '1' THEN 'Yes' ELSE 'No' END AS Magnet
-            ,CASE WHEN TITLEI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
-            ,CASE WHEN STITLI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
+            ,CASE 
+                WHEN CHARTR = '1' THEN 'Yes' 
+                WHEN CHARTR = '2' THEN 'No' 
+                ELSE NULL
+            END AS Charter
+            ,CASE
+                WHEN MAGNET = '1' THEN 'Yes'
+                WHEN MAGNET = '2' THEN 'No'
+                ELSE NULL
+            END AS Magnet
+            ,CASE
+                WHEN TITLEI = '1' THEN 'Yes'
+                WHEN TITLEI = '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchool
+            ,CASE
+                WHEN STITLI = '1' THEN 'Yes'
+                WHEN STITLI = '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchoolWide
             ,CASE WHEN CAST(MEMBER AS INT) >= 0 THEN MEMBER ELSE NULL END AS Students
             ,CASE WHEN CAST(FTE AS INT) >= 0 THEN FTE ELSE NULL END AS Teachers
             ,CASE WHEN CAST(FRELCH AS INT) >= 0 THEN FRELCH ELSE NULL END AS FreeLunch
@@ -132,10 +148,26 @@ schools_2008_2014 <- sql("
             ,LZIP4 AS ZIP4
             ,PHONE AS Phone
             ,ULOCAL AS LocaleCode
-            ,CASE WHEN CHARTR = '1' THEN 'Yes' ELSE 'No' END AS Charter
-            ,CASE WHEN MAGNET = '1' THEN 'Yes' ELSE 'No' END AS Magnet
-            ,CASE WHEN TITLEI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
-            ,CASE WHEN STITLI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
+            ,CASE 
+                WHEN CHARTR = '1' THEN 'Yes' 
+                WHEN CHARTR = '2' THEN 'No' 
+                ELSE NULL
+            END AS Charter
+            ,CASE
+                WHEN MAGNET = '1' THEN 'Yes'
+                WHEN MAGNET = '2' THEN 'No'
+                ELSE NULL
+            END AS Magnet
+            ,CASE
+                WHEN TITLEI = '1' THEN 'Yes'
+                WHEN TITLEI = '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchool
+            ,CASE
+                WHEN STITLI = '1' THEN 'Yes'
+                WHEN STITLI = '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchoolWide
             ,CASE WHEN CAST(MEMBER AS INT) >= 0 THEN MEMBER ELSE NULL END AS Students
             ,CASE WHEN CAST(FTE AS INT) >= 0 THEN FTE ELSE NULL END AS Teachers
             ,CASE WHEN CAST(FRELCH AS INT) >= 0 THEN FRELCH ELSE NULL END AS FreeLunch
@@ -165,10 +197,26 @@ schools_2008_2014 <- sql("
             ,LZIP4 AS ZIP4
             ,PHONE AS Phone
             ,ULOCAL AS LocaleCode
-            ,CASE WHEN CHARTR = '1' THEN 'Yes' ELSE 'No' END AS Charter
-            ,CASE WHEN MAGNET = '1' THEN 'Yes' ELSE 'No' END AS Magnet
-            ,CASE WHEN TITLEI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
-            ,CASE WHEN STITLI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
+            ,CASE 
+                WHEN CHARTR = '1' THEN 'Yes' 
+                WHEN CHARTR = '2' THEN 'No' 
+                ELSE NULL
+            END AS Charter
+            ,CASE
+                WHEN MAGNET = '1' THEN 'Yes'
+                WHEN MAGNET = '2' THEN 'No'
+                ELSE NULL
+            END AS Magnet
+            ,CASE
+                WHEN TITLEI = '1' THEN 'Yes'
+                WHEN TITLEI = '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchool
+            ,CASE
+                WHEN STITLI = '1' THEN 'Yes'
+                WHEN STITLI = '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchoolWide
             ,CASE WHEN CAST(MEMBER AS INT) >= 0 THEN MEMBER ELSE NULL END AS Students
             ,CASE WHEN CAST(FTE AS INT) >= 0 THEN FTE ELSE NULL END AS Teachers
             ,CASE WHEN CAST(FRELCH AS INT) >= 0 THEN FRELCH ELSE NULL END AS FreeLunch
@@ -198,10 +246,26 @@ schools_2008_2014 <- sql("
             ,LZIP4 AS ZIP4
             ,PHONE AS Phone
             ,ULOCAL AS LocaleCode
-            ,CASE WHEN CHARTR = '1' THEN 'Yes' ELSE 'No' END AS Charter
-            ,CASE WHEN MAGNET = '1' THEN 'Yes' ELSE 'No' END AS Magnet
-            ,CASE WHEN TITLEI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
-            ,CASE WHEN STITLI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
+            ,CASE 
+                WHEN CHARTR = '1' THEN 'Yes' 
+                WHEN CHARTR = '2' THEN 'No' 
+                ELSE NULL
+            END AS Charter
+            ,CASE
+                WHEN MAGNET = '1' THEN 'Yes'
+                WHEN MAGNET = '2' THEN 'No'
+                ELSE NULL
+            END AS Magnet
+            ,CASE
+                WHEN TITLEI = '1' THEN 'Yes'
+                WHEN TITLEI = '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchool
+            ,CASE
+                WHEN STITLI = '1' THEN 'Yes'
+                WHEN STITLI = '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchoolWide
             ,CASE WHEN CAST(MEMBER AS INT) >= 0 THEN MEMBER ELSE NULL END AS Students
             ,CASE WHEN CAST(FTE AS INT) >= 0 THEN FTE ELSE NULL END AS Teachers
             ,CASE WHEN CAST(FRELCH AS INT) >= 0 THEN FRELCH ELSE NULL END AS FreeLunch
@@ -231,10 +295,26 @@ schools_2008_2014 <- sql("
             ,LZIP409 AS ZIP4
             ,PHONE09 AS Phone
             ,ULOCAL09 AS LocaleCode
-            ,CASE WHEN CHARTR09 = '1' THEN 'Yes' ELSE 'No' END AS Charter
-            ,CASE WHEN MAGNET09 = '1' THEN 'Yes' ELSE 'No' END AS Magnet
-            ,CASE WHEN TITLEI09 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
-            ,CASE WHEN STITLI09 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
+            ,CASE 
+                WHEN CHARTR09 = '1' THEN 'Yes' 
+                WHEN CHARTR09 = '2' THEN 'No' 
+                ELSE NULL
+            END AS Charter
+            ,CASE
+                WHEN MAGNET09 = '1' THEN 'Yes'
+                WHEN MAGNET09 = '2' THEN 'No'
+                ELSE NULL
+            END AS Magnet
+            ,CASE
+                WHEN TITLEI09 = '1' THEN 'Yes'
+                WHEN TITLEI09 = '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchool
+            ,CASE
+                WHEN STITLI09 = '1' THEN 'Yes'
+                WHEN STITLI09 = '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchoolWide
             ,CASE WHEN CAST(MEMBER09 AS INT) >= 0 THEN MEMBER09 ELSE NULL END AS Students
             ,CASE WHEN CAST(FTE09 AS INT) >= 0 THEN FTE09 ELSE NULL END AS Teachers
             ,CASE WHEN CAST(FRELCH09 AS INT) >= 0 THEN FRELCH09 ELSE NULL END AS FreeLunch
@@ -264,10 +344,26 @@ schools_2008_2014 <- sql("
             ,LZIP408 AS ZIP4
             ,PHONE08 AS Phone
             ,ULOCAL08 AS LocaleCode
-            ,CASE WHEN CHARTR08 = '1' THEN 'Yes' ELSE 'No' END AS Charter
-            ,CASE WHEN MAGNET08 = '1' THEN 'Yes' ELSE 'No' END AS Magnet
-            ,CASE WHEN TITLEI08 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
-            ,CASE WHEN STITLI08 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
+            ,CASE 
+                WHEN CHARTR08 = '1' THEN 'Yes' 
+                WHEN CHARTR08 = '2' THEN 'No' 
+                ELSE NULL
+            END AS Charter
+            ,CASE
+                WHEN MAGNET08 = '1' THEN 'Yes'
+                WHEN MAGNET08 = '2' THEN 'No'
+                ELSE NULL
+            END AS Magnet
+            ,CASE
+                WHEN TITLEI08 = '1' THEN 'Yes'
+                WHEN TITLEI08 = '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchool
+            ,CASE
+                WHEN STITLI08 = '1' THEN 'Yes'
+                WHEN STITLI08 = '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchoolWide
             ,CASE WHEN CAST(MEMBER08 AS INT) >= 0 THEN MEMBER08 ELSE NULL END AS Students
             ,CASE WHEN CAST(FTE08 AS INT) >= 0 THEN FTE08 ELSE NULL END AS Teachers
             ,CASE WHEN CAST(FRELCH08 AS INT) >= 0 THEN FRELCH08 ELSE NULL END AS FreeLunch
@@ -297,10 +393,26 @@ schools_2008_2014 <- sql("
             ,LZIP407 AS ZIP4
             ,PHONE07 AS Phone
             ,ULOCAL07 AS LocaleCode
-            ,CASE WHEN CHARTR07 = '1' THEN 'Yes' ELSE 'No' END AS Charter
-            ,CASE WHEN MAGNET07 = '1' THEN 'Yes' ELSE 'No' END AS Magnet
-            ,CASE WHEN TITLEI07 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
-            ,CASE WHEN STITLI07 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
+            ,CASE 
+                WHEN CHARTR07 = '1' THEN 'Yes' 
+                WHEN CHARTR07 = '2' THEN 'No' 
+                ELSE NULL
+            END AS Charter
+            ,CASE
+                WHEN MAGNET07 = '1' THEN 'Yes'
+                WHEN MAGNET07 = '2' THEN 'No'
+                ELSE NULL
+            END AS Magnet
+            ,CASE
+                WHEN TITLEI07 = '1' THEN 'Yes'
+                WHEN TITLEI07 = '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchool
+            ,CASE
+                WHEN STITLI07 = '1' THEN 'Yes'
+                WHEN STITLI07 = '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchoolWide
             ,CASE WHEN CAST(MEMBER07 AS INT) >= 0 THEN MEMBER07 ELSE NULL END AS Students
             ,CASE WHEN CAST(FTE07 AS INT) >= 0 THEN FTE07 ELSE NULL END AS Teachers
             ,CASE WHEN CAST(FRELCH07 AS INT) >= 0 THEN FRELCH07 ELSE NULL END AS FreeLunch
@@ -676,15 +788,19 @@ schools_2015_onwards <- sql("
             ,d.CHARTER_TEXT AS Charter
             ,CASE
             	WHEN c.MAGNET_TEXT = 'Yes' THEN 'Yes'
-            	ELSE 'No'
+                WHEN c.MAGNET_TEXT = 'No' THEN 'No'
+            	ELSE NULL
             END AS Magnet
             ,CASE
             	WHEN c.TITLEI_STATUS IN ('SWELIGNOPROG', 'SWELIGTGPROG', 'TGELGBNOPROG', 'TGELGBTGPROG') THEN 'Yes'
-            	ELSE 'No'
+                WHEN c.TITLEI_STATUS IN ('NOTTITLE1ELIG') THEN 'No'
+            	ELSE NULL
             END AS TitleISchool
+            -- TODO: School Locator has 'not applicable' values for School Wide; not sure what the logic is for this. we set it to No.
             ,CASE
-            	WHEN c.TITLEI_STATUS = 'SWELIGSWPROG' THEN 'Yes'
-            	ELSE 'No'
+            	WHEN c.TITLEI_STATUS IN  ('SWELIGNOPROG', 'SWELIGSWPROG', 'SWELIGTGPROG') THEN 'Yes'
+                WHEN c.TITLEI_STATUS IN ('TGELGBNOPROG', 'TGELGBTGPROG', 'NOTTITLE1ELIG') THEN 'No'
+            	ELSE NULL
             END AS TitleISchoolWide
             ,CASE WHEN CAST(m.STUDENT_COUNT as INT) >= 0 THEN m.STUDENT_COUNT ELSE NULL END AS Students
             ,CASE WHEN CAST(s.TEACHERS as INT) >= 0 THEN s.TEACHERS ELSE NULL END AS Teachers
