@@ -12,6 +12,7 @@ helpful tweaks/additions (namely, latitude and longitude fields)
 
 - Windows 10 and PowerShell
 - R 3.4.4
+- Java 8
 - Apache Spark (instructions below)
 
 # Installing Spark
