@@ -24,6 +24,314 @@ input_dir <- "C:/Users/jchiu/NCES/input"
 
 num_partitions = 4
 
+#### 2008 - 2014
+#### these years had single files for CCD and variation in column names
+
+# teacher count field (FTE) is lways -1 or -2 for WA state schools
+createOrReplaceTempView(
+    read.df(paste(input_dir, "sc132a.txt", sep="/"), source="csv", "header"= "true", sep="\t")
+    ,"schools2014")
+
+createOrReplaceTempView(
+    read.df(paste(input_dir, "sc122a.txt", sep="/"), source="csv", "header"= "true", sep="\t")
+    ,"schools2013")
+
+createOrReplaceTempView(
+    read.df(paste(input_dir, "sc111a_supp.txt", sep="/"), source="csv", "header"= "true", sep="\t")
+    ,"schools2012")
+
+createOrReplaceTempView(
+    read.df(paste(input_dir, "sc102a.txt", sep="/"), source="csv", "header"= "true", sep="\t")
+    ,"schools2011")
+
+createOrReplaceTempView(
+    read.df(paste(input_dir, "sc102a.txt", sep="/"), source="csv", "header"= "true", sep="\t")
+    ,"schools2011")
+
+# in 2010 and prior, yr is encoded in the fieldname (e.g. SEASCH07)
+
+createOrReplaceTempView(
+    read.df(paste(input_dir, "sc092a.txt", sep="/"), source="csv", "header"= "true", sep="\t")
+    ,"schools2010")
+
+createOrReplaceTempView(
+    read.df(paste(input_dir, "sc081b.txt", sep="/"), source="csv", "header"= "true", sep="\t")
+    ,"schools2009")
+
+createOrReplaceTempView(
+    read.df(paste(input_dir, "sc071b.txt", sep="/"), source="csv", "header"= "true", sep="\t")
+    ,"schools2008")
+
+schools_2008_2014 <- sql("
+    WITH T AS (
+        SELECT
+            CONCAT(SURVYEAR, '-', CAST(SURVYEAR AS INT) + 1) AS AcademicYear
+            ,NCESSCH AS NCESSchoolID
+            ,CONCAT(LSTATE, '-', STID, '-', SEASCH) AS StateSchoolID
+            ,LEAID AS NCESDistrictID
+            ,CONCAT(LSTATE, '-', STID) AS StateDistrictID
+            ,GSLO AS LowGrade
+            ,GSHI AS HighGrade
+            ,SCHNAM AS SchoolName
+            ,LEANM AS District
+            ,CONAME AS CountyName
+            ,LSTREE AS StreetAddress
+            ,LCITY as City
+            ,LSTATE AS State
+            ,LZIP AS ZIP
+            ,LZIP4 AS ZIP4
+            ,PHONE AS Phone
+            ,ULOCAL AS LocaleCode
+            ,CASE WHEN CHARTR = '1' THEN 'Yes' ELSE 'No' END AS Charter
+            ,CASE WHEN MAGNET = '1' THEN 'Yes' ELSE 'No' END AS Magnet
+            ,CASE WHEN TITLEI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
+            ,CASE WHEN STITLI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
+            ,CASE WHEN CAST(MEMBER AS INT) >= 0 THEN MEMBER ELSE NULL END AS Students
+            ,CASE WHEN CAST(FTE AS INT) >= 0 THEN FTE ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(FRELCH AS INT) >= 0 THEN FRELCH ELSE NULL END AS FreeLunch
+            ,CASE WHEN CAST(REDLCH AS INT) >= 0 THEN REDLCH ELSE NULL END AS ReducedLunch
+            -- additional fields not in School Locator format
+            ,LATCOD As Latitude
+            ,LONCOD as Longitude
+        FROM schools2014
+
+        UNION ALL
+
+        SELECT
+            CONCAT(SURVYEAR, '-', CAST(SURVYEAR AS INT) + 1) AS AcademicYear
+            ,NCESSCH AS NCESSchoolID
+            ,CONCAT(LSTATE, '-', STID, '-', SEASCH) AS StateSchoolID
+            ,LEAID AS NCESDistrictID
+            ,CONCAT(LSTATE, '-', STID) AS StateDistrictID
+            ,GSLO AS LowGrade
+            ,GSHI AS HighGrade
+            ,SCHNAM AS SchoolName
+            ,LEANM AS District
+            ,CONAME AS CountyName
+            ,LSTREE AS StreetAddress
+            ,LCITY as City
+            ,LSTATE AS State
+            ,LZIP AS ZIP
+            ,LZIP4 AS ZIP4
+            ,PHONE AS Phone
+            ,ULOCAL AS LocaleCode
+            ,CASE WHEN CHARTR = '1' THEN 'Yes' ELSE 'No' END AS Charter
+            ,CASE WHEN MAGNET = '1' THEN 'Yes' ELSE 'No' END AS Magnet
+            ,CASE WHEN TITLEI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
+            ,CASE WHEN STITLI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
+            ,CASE WHEN CAST(MEMBER AS INT) >= 0 THEN MEMBER ELSE NULL END AS Students
+            ,CASE WHEN CAST(FTE AS INT) >= 0 THEN FTE ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(FRELCH AS INT) >= 0 THEN FRELCH ELSE NULL END AS FreeLunch
+            ,CASE WHEN CAST(REDLCH AS INT) >= 0 THEN REDLCH ELSE NULL END AS ReducedLunch
+            -- additional fields not in School Locator format
+            ,LATCOD As Latitude
+            ,LONCOD as Longitude
+        FROM schools2013
+         
+        UNION ALL
+
+        SELECT
+            CONCAT(SURVYEAR, '-', CAST(SURVYEAR AS INT) + 1) AS AcademicYear
+            ,NCESSCH AS NCESSchoolID
+            ,CONCAT(LSTATE, '-', STID, '-', SEASCH) AS StateSchoolID
+            ,LEAID AS NCESDistrictID
+            ,CONCAT(LSTATE, '-', STID) AS StateDistrictID
+            ,GSLO AS LowGrade
+            ,GSHI AS HighGrade
+            ,SCHNAM AS SchoolName
+            ,LEANM AS District
+            ,CONAME AS CountyName
+            ,LSTREE AS StreetAddress
+            ,LCITY as City
+            ,LSTATE AS State
+            ,LZIP AS ZIP
+            ,LZIP4 AS ZIP4
+            ,PHONE AS Phone
+            ,ULOCAL AS LocaleCode
+            ,CASE WHEN CHARTR = '1' THEN 'Yes' ELSE 'No' END AS Charter
+            ,CASE WHEN MAGNET = '1' THEN 'Yes' ELSE 'No' END AS Magnet
+            ,CASE WHEN TITLEI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
+            ,CASE WHEN STITLI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
+            ,CASE WHEN CAST(MEMBER AS INT) >= 0 THEN MEMBER ELSE NULL END AS Students
+            ,CASE WHEN CAST(FTE AS INT) >= 0 THEN FTE ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(FRELCH AS INT) >= 0 THEN FRELCH ELSE NULL END AS FreeLunch
+            ,CASE WHEN CAST(REDLCH AS INT) >= 0 THEN REDLCH ELSE NULL END AS ReducedLunch
+            -- additional fields not in School Locator format
+            ,LATCOD As Latitude
+            ,LONCOD as Longitude
+        FROM schools2012
+
+        UNION ALL
+
+        SELECT
+            CONCAT(SURVYEAR, '-', CAST(SURVYEAR AS INT) + 1) AS AcademicYear
+            ,NCESSCH AS NCESSchoolID
+            ,CONCAT(LSTATE, '-', STID, '-', SEASCH) AS StateSchoolID
+            ,LEAID AS NCESDistrictID
+            ,CONCAT(LSTATE, '-', STID) AS StateDistrictID
+            ,GSLO AS LowGrade
+            ,GSHI AS HighGrade
+            ,SCHNAM AS SchoolName
+            ,LEANM AS District
+            ,CONAME AS CountyName
+            ,LSTREE AS StreetAddress
+            ,LCITY as City
+            ,LSTATE AS State
+            ,LZIP AS ZIP
+            ,LZIP4 AS ZIP4
+            ,PHONE AS Phone
+            ,ULOCAL AS LocaleCode
+            ,CASE WHEN CHARTR = '1' THEN 'Yes' ELSE 'No' END AS Charter
+            ,CASE WHEN MAGNET = '1' THEN 'Yes' ELSE 'No' END AS Magnet
+            ,CASE WHEN TITLEI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
+            ,CASE WHEN STITLI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
+            ,CASE WHEN CAST(MEMBER AS INT) >= 0 THEN MEMBER ELSE NULL END AS Students
+            ,CASE WHEN CAST(FTE AS INT) >= 0 THEN FTE ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(FRELCH AS INT) >= 0 THEN FRELCH ELSE NULL END AS FreeLunch
+            ,CASE WHEN CAST(REDLCH AS INT) >= 0 THEN REDLCH ELSE NULL END AS ReducedLunch
+            -- additional fields not in School Locator format
+            ,LATCOD As Latitude
+            ,LONCOD as Longitude
+        FROM schools2011
+
+        UNION ALL
+
+        SELECT
+            '2009-2010' AS AcademicYear
+            ,NCESSCH AS NCESSchoolID
+            ,CONCAT(LSTATE09, '-', STID09, '-', SEASCH09) AS StateSchoolID
+            ,LEAID AS NCESDistrictID
+            ,CONCAT(LSTATE09, '-', STID09) AS StateDistrictID
+            ,GSLO09 AS LowGrade
+            ,GSHI09 AS HighGrade
+            ,SCHNAM09 AS SchoolName
+            ,LEANM09 AS District
+            ,CONAME09 AS CountyName
+            ,LSTREE09 AS StreetAddress
+            ,LCITY09 as City
+            ,LSTATE09 AS State
+            ,LZIP09 AS ZIP
+            ,LZIP409 AS ZIP4
+            ,PHONE09 AS Phone
+            ,ULOCAL09 AS LocaleCode
+            ,CASE WHEN CHARTR09 = '1' THEN 'Yes' ELSE 'No' END AS Charter
+            ,CASE WHEN MAGNET09 = '1' THEN 'Yes' ELSE 'No' END AS Magnet
+            ,CASE WHEN TITLEI09 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
+            ,CASE WHEN STITLI09 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
+            ,CASE WHEN CAST(MEMBER09 AS INT) >= 0 THEN MEMBER09 ELSE NULL END AS Students
+            ,CASE WHEN CAST(FTE09 AS INT) >= 0 THEN FTE09 ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(FRELCH09 AS INT) >= 0 THEN FRELCH09 ELSE NULL END AS FreeLunch
+            ,CASE WHEN CAST(REDLCH09 AS INT) >= 0 THEN REDLCH09 ELSE NULL END AS ReducedLunch
+            -- additional fields not in School Locator format
+            ,LATCOD09 As Latitude
+            ,LONCOD09 as Longitude
+        FROM schools2010
+
+        UNION ALL 
+
+        SELECT
+            '2008-2009' AS AcademicYear
+            ,NCESSCH AS NCESSchoolID
+            ,CONCAT(LSTATE08, '-', STID08, '-', SEASCH08) AS StateSchoolID
+            ,LEAID AS NCESDistrictID
+            ,CONCAT(LSTATE08, '-', STID08) AS StateDistrictID
+            ,GSLO08 AS LowGrade
+            ,GSHI08 AS HighGrade
+            ,SCHNAM08 AS SchoolName
+            ,LEANM08 AS District
+            ,CONAME08 AS CountyName
+            ,LSTREE08 AS StreetAddress
+            ,LCITY08 as City
+            ,LSTATE08 AS State
+            ,LZIP08 AS ZIP
+            ,LZIP408 AS ZIP4
+            ,PHONE08 AS Phone
+            ,ULOCAL08 AS LocaleCode
+            ,CASE WHEN CHARTR08 = '1' THEN 'Yes' ELSE 'No' END AS Charter
+            ,CASE WHEN MAGNET08 = '1' THEN 'Yes' ELSE 'No' END AS Magnet
+            ,CASE WHEN TITLEI08 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
+            ,CASE WHEN STITLI08 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
+            ,CASE WHEN CAST(MEMBER08 AS INT) >= 0 THEN MEMBER08 ELSE NULL END AS Students
+            ,CASE WHEN CAST(FTE08 AS INT) >= 0 THEN FTE08 ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(FRELCH08 AS INT) >= 0 THEN FRELCH08 ELSE NULL END AS FreeLunch
+            ,CASE WHEN CAST(REDLCH08 AS INT) >= 0 THEN REDLCH08 ELSE NULL END AS ReducedLunch
+            -- additional fields not in School Locator format
+            ,LATCOD08 As Latitude
+            ,LONCOD08 as Longitude
+        FROM schools2009
+         
+        UNION ALL 
+
+        SELECT
+            '2007-2008' AS AcademicYear
+            ,NCESSCH AS NCESSchoolID
+            ,CONCAT(LSTATE07, '-', STID07, '-', SEASCH07) AS StateSchoolID
+            ,LEAID AS NCESDistrictID
+            ,CONCAT(LSTATE07, '-', STID07) AS StateDistrictID
+            ,GSLO07 AS LowGrade
+            ,GSHI07 AS HighGrade
+            ,SCHNAM07 AS SchoolName
+            ,LEANM07 AS District
+            ,CONAME07 AS CountyName
+            ,LSTREE07 AS StreetAddress
+            ,LCITY07 as City
+            ,LSTATE07 AS State
+            ,LZIP07 AS ZIP
+            ,LZIP407 AS ZIP4
+            ,PHONE07 AS Phone
+            ,ULOCAL07 AS LocaleCode
+            ,CASE WHEN CHARTR07 = '1' THEN 'Yes' ELSE 'No' END AS Charter
+            ,CASE WHEN MAGNET07 = '1' THEN 'Yes' ELSE 'No' END AS Magnet
+            ,CASE WHEN TITLEI07 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
+            ,CASE WHEN STITLI07 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
+            ,CASE WHEN CAST(MEMBER07 AS INT) >= 0 THEN MEMBER07 ELSE NULL END AS Students
+            ,CASE WHEN CAST(FTE07 AS INT) >= 0 THEN FTE07 ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(FRELCH07 AS INT) >= 0 THEN FRELCH07 ELSE NULL END AS FreeLunch
+            ,CASE WHEN CAST(REDLCH07 AS INT) >= 0 THEN REDLCH07 ELSE NULL END AS ReducedLunch
+            -- additional fields not in School Locator format
+            ,LATCOD07 As Latitude
+            ,LONCOD07 as Longitude
+        FROM schools2008
+    )
+    SELECT 
+        AcademicYear
+        ,NCESSchoolID
+        ,StateSchoolID
+        ,NCESDistrictID
+        ,StateDistrictID
+        ,LowGrade
+        ,HighGrade
+        ,SchoolName
+        ,District
+        ,CountyName
+        ,StreetAddress
+        ,City
+        ,State
+        ,ZIP
+        ,ZIP4
+        ,Phone
+        ,LocaleCode
+        ,Charter
+        ,Magnet
+        ,TitleISchool
+        ,TitleISchoolWide
+        ,Students
+        ,Teachers
+        ,CAST(Students as FLOAT) / CAST(Teachers as FLOAT) AS StudentTeacherRatio
+        ,FreeLunch
+        ,ReducedLunch
+        ,Latitude
+        ,Longitude
+    FROM T
+")
+
+createOrReplaceTempView(
+    schools_2008_2014
+    ,"schools_2008_2014")
+
+#### 2015 Onwards
+#### these years had 5 separate files plus geocode file
+
 #### directory file
 
 createOrReplaceTempView(
@@ -291,14 +599,14 @@ createOrReplaceTempView(
     ,"geocodeRaw2015")
 
 geocode <- sql("
-	SELECT
+    SELECT
         CONCAT(SCHOOLYEAR, '-', CAST(SCHOOLYEAR AS INT) + 1) AS SCHOOLYEAR
-		,NCESSCH
-		,NMCNTY
-		,LOCALE
-		,LAT
-		,LON
-	FROM geocodeRaw2017
+        ,NCESSCH
+        ,NMCNTY
+        ,LOCALE
+        ,LAT
+        ,LON
+    FROM geocodeRaw2017
     UNION ALL
     SELECT
         '2015-2016' AS SCHOOLYEAR
@@ -321,357 +629,164 @@ geocode <- sql("
 
 createOrReplaceTempView(geocode, "geocode")
 
-#### 2014
+schools_2015_onwards <- sql("
+    WITH T AS (
+        SELECT
+          	d.SCHOOL_YEAR AS AcademicYear
+            ,d.NCESSCH AS NCESSchoolID
+            ,CASE 
+                WHEN d.SCHOOL_YEAR = '2015-2016' THEN CONCAT(LSTATE, '-', d.ST_SCHID) 
+                WHEN CAST(SUBSTRING(d.SCHOOL_YEAR, 6, 4) as INT) <= 2015 THEN CONCAT(LSTATE, '-', d.ST_LEAID, '-', d.ST_SCHID)
+                ELSE d.ST_SCHID
+            END AS StateSchoolID
+            ,d.LEAID AS NCESDistrictID
+            ,CASE 
+                WHEN CAST(SUBSTRING(d.SCHOOL_YEAR, 6, 4) as INT) <= 2016 THEN CONCAT(LSTATE, '-', d.ST_LEAID)
+                ELSE d.ST_LEAID
+            END AS StateDistrictID
+            ,d.GSLO AS LowGrade
+            ,d.GSHI AS HighGrade
+            ,d.SCH_NAME AS SchoolName
+            ,d.LEA_NAME AS District
+            ,g.NMCNTY AS CountyName
+            ,d.LSTREET1 AS StreetAddress
+            ,d.LCITY as City
+            ,d.LSTATE AS State
+            ,d.LZIP AS ZIP
+            ,d.LZIP4 AS ZIP4
+            ,d.PHONE AS Phone
+            ,g.LOCALE AS LocaleCode
+            ,d.CHARTER_TEXT AS Charter
+            ,CASE
+            	WHEN c.MAGNET_TEXT = 'Yes' THEN 'Yes'
+            	ELSE 'No'
+            END AS Magnet
+            ,CASE
+            	WHEN c.TITLEI_STATUS IN ('SWELIGNOPROG', 'SWELIGTGPROG', 'TGELGBNOPROG', 'TGELGBTGPROG') THEN 'Yes'
+            	ELSE 'No'
+            END AS TitleISchool
+            ,CASE
+            	WHEN c.TITLEI_STATUS = 'SWELIGSWPROG' THEN 'Yes'
+            	ELSE 'No'
+            END AS TitleISchoolWide
+            ,CASE WHEN CAST(m.STUDENT_COUNT as INT) >= 0 THEN m.STUDENT_COUNT ELSE NULL END AS Students
+            ,CASE WHEN CAST(s.TEACHERS as INT) >= 0 THEN s.TEACHERS ELSE NULL END AS Teachers
+            ,free.STUDENT_COUNT AS FreeLunch
+            ,reduced.STUDENT_COUNT AS ReducedLunch
+            -- additional fields not in School Locator format
+            ,g.LAT As Latitude
+            ,g.LON as Longitude
+        FROM directory d
+        LEFT JOIN characteristics c
+            ON d.SCHOOL_YEAR = c.SCHOOL_YEAR
+            AND d.NCESSCH = c.NCESSCH
+        LEFT JOIN staff s
+         	ON d.SCHOOL_YEAR = s.SCHOOL_YEAR
+        	AND d.NCESSCH = s.NCESSCH
+        LEFT JOIN membership m
+         	ON d.SCHOOL_YEAR = m.SCHOOL_YEAR
+        	AND d.NCESSCH = m.NCESSCH
+        LEFT JOIN free_lunch free
+         	ON d.SCHOOL_YEAR = free.SCHOOL_YEAR
+        	AND d.NCESSCH = free.NCESSCH
+        LEFT JOIN free_lunch reduced
+         	ON d.SCHOOL_YEAR = reduced.SCHOOL_YEAR
+        	AND d.NCESSCH = reduced.NCESSCH
+        LEFT JOIN geocode g
+         	ON d.SCHOOL_YEAR = g.SCHOOLYEAR
+         	AND d.NCESSCH = g.NCESSCH
+    )
+    SELECT 
+        AcademicYear
+        ,NCESSchoolID
+        ,StateSchoolID
+        ,NCESDistrictID
+        ,StateDistrictID
+        ,LowGrade
+        ,HighGrade
+        ,SchoolName
+        ,District
+        ,CountyName
+        ,StreetAddress
+        ,City
+        ,State
+        ,ZIP
+        ,ZIP4
+        ,Phone
+        ,LocaleCode
+        ,Charter
+        ,Magnet
+        ,TitleISchool
+        ,TitleISchoolWide
+        ,Students
+        ,Teachers
+        ,CAST(Students as FLOAT) / CAST(Teachers as FLOAT) AS StudentTeacherRatio
+        ,FreeLunch
+        ,ReducedLunch
+        ,Latitude
+        ,Longitude
+    FROM T
+    ")
 
-# teacher count field (FTE) is lways -1 or -2 for WA state schools
 createOrReplaceTempView(
-    read.df(paste(input_dir, "sc132a.txt", sep="/"), source="csv", "header"= "true", sep="\t")
-    ,"schools2014")
+    schools_2015_onwards
+    ,"schools_2015_onwards")
+
+#### Locale
 
 createOrReplaceTempView(
-    read.df(paste(input_dir, "sc122a.txt", sep="/"), source="csv", "header"= "true", sep="\t")
-    ,"schools2013")
+    read.df(paste(input_dir, "LocaleCodes.txt", sep="/"), source="csv", "header"= "true", sep="\t")
+    ,"locale_codes")
 
-createOrReplaceTempView(
-    read.df(paste(input_dir, "sc111a_supp.txt", sep="/"), source="csv", "header"= "true", sep="\t")
-    ,"schools2012")
 
-createOrReplaceTempView(
-    read.df(paste(input_dir, "sc102a.txt", sep="/"), source="csv", "header"= "true", sep="\t")
-    ,"schools2011")
-
-createOrReplaceTempView(
-    read.df(paste(input_dir, "sc102a.txt", sep="/"), source="csv", "header"= "true", sep="\t")
-    ,"schools2011")
-
-# in 2010 and prior, yr is encoded in the fieldname (e.g. SEASCH07)
-
-createOrReplaceTempView(
-    read.df(paste(input_dir, "sc092a.txt", sep="/"), source="csv", "header"= "true", sep="\t")
-    ,"schools2010")
-
-createOrReplaceTempView(
-    read.df(paste(input_dir, "sc081b.txt", sep="/"), source="csv", "header"= "true", sep="\t")
-    ,"schools2009")
-
-createOrReplaceTempView(
-    read.df(paste(input_dir, "sc071b.txt", sep="/"), source="csv", "header"= "true", sep="\t")
-    ,"schools2008")
-
+#### Union everything
 
 final <- sql("
-  SELECT
-  	d.SCHOOL_YEAR AS AcademicYear
-    ,d.NCESSCH AS NCESSchoolID
-    ,CASE 
-        WHEN d.SCHOOL_YEAR = '2015-2016' THEN CONCAT(LSTATE, '-', d.ST_SCHID) 
-        WHEN CAST(SUBSTRING(d.SCHOOL_YEAR, 6, 4) as INT) <= 2015 THEN CONCAT(LSTATE, '-', d.ST_LEAID, '-', d.ST_SCHID)
-        ELSE d.ST_SCHID
-    END AS StateSchoolID
-    ,d.LEAID AS NCESDistrictID
-    ,CASE 
-        WHEN CAST(SUBSTRING(d.SCHOOL_YEAR, 6, 4) as INT) <= 2016 THEN CONCAT(LSTATE, '-', d.ST_LEAID)
-        ELSE d.ST_LEAID
-    END AS StateDistrictID
-    ,d.GSLO AS LowGrade
-    ,d.GSHI AS HighGrade
-    ,d.SCH_NAME AS SchoolName
-    ,d.LEA_NAME AS District
-    ,g.NMCNTY AS CountyName
-    ,d.LSTREET1 AS StreetAddress
-    ,d.LCITY as City
-    ,d.LSTATE AS State
-    ,d.LZIP AS ZIP
-    ,d.LZIP4 AS ZIP4
-    ,d.PHONE AS Phone
-    ,g.LOCALE AS LocaleCode
-    ,'TODO' AS Locale
-    ,d.CHARTER_TEXT AS Charter
-    ,CASE
-    	WHEN c.MAGNET_TEXT = 'Yes' THEN 'Yes'
-    	ELSE 'No'
-    END AS Magnet
-    ,CASE
-    	WHEN c.TITLEI_STATUS IN ('SWELIGNOPROG', 'SWELIGTGPROG', 'TGELGBNOPROG', 'TGELGBTGPROG') THEN 'Yes'
-    	ELSE 'No'
-    END AS TitleISchool
-    ,CASE
-    	WHEN c.TITLEI_STATUS = 'SWELIGSWPROG' THEN 'Yes'
-    	ELSE 'No'
-    END AS TitleISchoolWide
-    ,m.STUDENT_COUNT AS Students
-    ,s.TEACHERS AS Teachers
-    ,CAST(m.STUDENT_COUNT as FLOAT) / CAST(s.TEACHERS as FLOAT) AS StudentTeacherRatio
-    ,free.STUDENT_COUNT AS FreeLunch
-    ,reduced.STUDENT_COUNT AS ReducedLunch
-    -- additional fields not in School Locator format
-    ,g.LAT As Latitude
-    ,g.LON as Longitude
- FROM directory d
- LEFT JOIN characteristics c
- 	ON d.SCHOOL_YEAR = c.SCHOOL_YEAR
-	AND d.NCESSCH = c.NCESSCH
- LEFT JOIN staff s
- 	ON d.SCHOOL_YEAR = s.SCHOOL_YEAR
-	AND d.NCESSCH = s.NCESSCH
- LEFT JOIN membership m
- 	ON d.SCHOOL_YEAR = m.SCHOOL_YEAR
-	AND d.NCESSCH = m.NCESSCH
- LEFT JOIN free_lunch free
- 	ON d.SCHOOL_YEAR = free.SCHOOL_YEAR
-	AND d.NCESSCH = free.NCESSCH
- LEFT JOIN free_lunch reduced
- 	ON d.SCHOOL_YEAR = reduced.SCHOOL_YEAR
-	AND d.NCESSCH = reduced.NCESSCH
- LEFT JOIN geocode g
- 	ON d.SCHOOL_YEAR = g.SCHOOLYEAR
- 	AND d.NCESSCH = g.NCESSCH
- 
-UNION ALL
+    WITH T AS (
+        SELECT
+        *
+        FROM schools_2008_2014
 
-SELECT
-    CONCAT(SURVYEAR, '-', CAST(SURVYEAR AS INT) + 1) AS AcademicYear
-    ,NCESSCH AS NCESSchoolID
-    ,CONCAT(LSTATE, '-', STID, '-', SEASCH) AS StateSchoolID
-    ,LEAID AS NCESDistrictID
-    ,CONCAT(LSTATE, '-', STID) AS StateDistrictID
-    ,GSLO AS LowGrade
-    ,GSHI AS HighGrade
-    ,SCHNAM AS SchoolName
-    ,LEANM AS District
-    ,CONAME AS CountyName
-    ,LSTREE AS StreetAddress
-    ,LCITY as City
-    ,LSTATE AS State
-    ,LZIP AS ZIP
-    ,LZIP4 AS ZIP4
-    ,PHONE AS Phone
-    ,ULOCAL AS LocaleCode
-    ,'TODO' AS Locale
-    ,CASE WHEN CHARTR = '1' THEN 'Yes' ELSE 'No' END AS Charter
-    ,CASE WHEN MAGNET = '1' THEN 'Yes' ELSE 'No' END AS Magnet
-    ,CASE WHEN TITLEI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
-    ,CASE WHEN STITLI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
-    ,MEMBER AS Students
-    ,FTE AS Teachers
-    ,CAST(MEMBER as FLOAT) / CAST(FTE as FLOAT) AS StudentTeacherRatio
-    ,FRELCH AS FreeLunch
-    ,REDLCH AS ReducedLunch
-    -- additional fields not in School Locator format
-    ,LATCOD As Latitude
-    ,LONCOD as Longitude
- FROM schools2014
+        UNION ALL
 
-UNION ALL
-
-SELECT
-    CONCAT(SURVYEAR, '-', CAST(SURVYEAR AS INT) + 1) AS AcademicYear
-    ,NCESSCH AS NCESSchoolID
-    ,CONCAT(LSTATE, '-', STID, '-', SEASCH) AS StateSchoolID
-    ,LEAID AS NCESDistrictID
-    ,CONCAT(LSTATE, '-', STID) AS StateDistrictID
-    ,GSLO AS LowGrade
-    ,GSHI AS HighGrade
-    ,SCHNAM AS SchoolName
-    ,LEANM AS District
-    ,CONAME AS CountyName
-    ,LSTREE AS StreetAddress
-    ,LCITY as City
-    ,LSTATE AS State
-    ,LZIP AS ZIP
-    ,LZIP4 AS ZIP4
-    ,PHONE AS Phone
-    ,ULOCAL AS LocaleCode
-    ,'TODO' AS Locale
-    ,CASE WHEN CHARTR = '1' THEN 'Yes' ELSE 'No' END AS Charter
-    ,CASE WHEN MAGNET = '1' THEN 'Yes' ELSE 'No' END AS Magnet
-    ,CASE WHEN TITLEI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
-    ,CASE WHEN STITLI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
-    ,MEMBER AS Students
-    ,FTE AS Teachers
-    ,CAST(MEMBER as FLOAT) / CAST(FTE as FLOAT) AS StudentTeacherRatio
-    ,FRELCH AS FreeLunch
-    ,REDLCH AS ReducedLunch
-    -- additional fields not in School Locator format
-    ,LATCOD As Latitude
-    ,LONCOD as Longitude
- FROM schools2013
- 
-UNION ALL
-
-SELECT
-    CONCAT(SURVYEAR, '-', CAST(SURVYEAR AS INT) + 1) AS AcademicYear
-    ,NCESSCH AS NCESSchoolID
-    ,CONCAT(LSTATE, '-', STID, '-', SEASCH) AS StateSchoolID
-    ,LEAID AS NCESDistrictID
-    ,CONCAT(LSTATE, '-', STID) AS StateDistrictID
-    ,GSLO AS LowGrade
-    ,GSHI AS HighGrade
-    ,SCHNAM AS SchoolName
-    ,LEANM AS District
-    ,CONAME AS CountyName
-    ,LSTREE AS StreetAddress
-    ,LCITY as City
-    ,LSTATE AS State
-    ,LZIP AS ZIP
-    ,LZIP4 AS ZIP4
-    ,PHONE AS Phone
-    ,ULOCAL AS LocaleCode
-    ,'TODO' AS Locale
-    ,CASE WHEN CHARTR = '1' THEN 'Yes' ELSE 'No' END AS Charter
-    ,CASE WHEN MAGNET = '1' THEN 'Yes' ELSE 'No' END AS Magnet
-    ,CASE WHEN TITLEI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
-    ,CASE WHEN STITLI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
-    ,MEMBER AS Students
-    ,FTE AS Teachers
-    ,CAST(MEMBER as FLOAT) / CAST(FTE as FLOAT) AS StudentTeacherRatio
-    ,FRELCH AS FreeLunch
-    ,REDLCH AS ReducedLunch
-    -- additional fields not in School Locator format
-    ,LATCOD As Latitude
-    ,LONCOD as Longitude
- FROM schools2012
-
-UNION ALL
-
-SELECT
-    CONCAT(SURVYEAR, '-', CAST(SURVYEAR AS INT) + 1) AS AcademicYear
-    ,NCESSCH AS NCESSchoolID
-    ,CONCAT(LSTATE, '-', STID, '-', SEASCH) AS StateSchoolID
-    ,LEAID AS NCESDistrictID
-    ,CONCAT(LSTATE, '-', STID) AS StateDistrictID
-    ,GSLO AS LowGrade
-    ,GSHI AS HighGrade
-    ,SCHNAM AS SchoolName
-    ,LEANM AS District
-    ,CONAME AS CountyName
-    ,LSTREE AS StreetAddress
-    ,LCITY as City
-    ,LSTATE AS State
-    ,LZIP AS ZIP
-    ,LZIP4 AS ZIP4
-    ,PHONE AS Phone
-    ,ULOCAL AS LocaleCode
-    ,'TODO' AS Locale
-    ,CASE WHEN CHARTR = '1' THEN 'Yes' ELSE 'No' END AS Charter
-    ,CASE WHEN MAGNET = '1' THEN 'Yes' ELSE 'No' END AS Magnet
-    ,CASE WHEN TITLEI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
-    ,CASE WHEN STITLI = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
-    ,MEMBER AS Students
-    ,FTE AS Teachers
-    ,CAST(MEMBER as FLOAT) / CAST(FTE as FLOAT) AS StudentTeacherRatio
-    ,FRELCH AS FreeLunch
-    ,REDLCH AS ReducedLunch
-    -- additional fields not in School Locator format
-    ,LATCOD As Latitude
-    ,LONCOD as Longitude
- FROM schools2011
-
-UNION ALL
-
-SELECT
-    '2009-2010' AS AcademicYear
-    ,NCESSCH AS NCESSchoolID
-    ,CONCAT(LSTATE09, '-', STID09, '-', SEASCH09) AS StateSchoolID
-    ,LEAID AS NCESDistrictID
-    ,CONCAT(LSTATE09, '-', STID09) AS StateDistrictID
-    ,GSLO09 AS LowGrade
-    ,GSHI09 AS HighGrade
-    ,SCHNAM09 AS SchoolName
-    ,LEANM09 AS District
-    ,CONAME09 AS CountyName
-    ,LSTREE09 AS StreetAddress
-    ,LCITY09 as City
-    ,LSTATE09 AS State
-    ,LZIP09 AS ZIP
-    ,LZIP409 AS ZIP4
-    ,PHONE09 AS Phone
-    ,ULOCAL09 AS LocaleCode
-    ,'TODO' AS Locale
-    ,CASE WHEN CHARTR09 = '1' THEN 'Yes' ELSE 'No' END AS Charter
-    ,CASE WHEN MAGNET09 = '1' THEN 'Yes' ELSE 'No' END AS Magnet
-    ,CASE WHEN TITLEI09 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
-    ,CASE WHEN STITLI09 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
-    ,MEMBER09 AS Students
-    ,FTE09 AS Teachers
-    ,CAST(MEMBER09 as FLOAT) / CAST(FTE09 as FLOAT) AS StudentTeacherRatio
-    ,FRELCH09 AS FreeLunch
-    ,REDLCH09 AS ReducedLunch
-    -- additional fields not in School Locator format
-    ,LATCOD09 As Latitude
-    ,LONCOD09 as Longitude
- FROM schools2010
-
-UNION ALL 
-
- SELECT
-    '2008-2009' AS AcademicYear
-    ,NCESSCH AS NCESSchoolID
-    ,CONCAT(LSTATE08, '-', STID08, '-', SEASCH08) AS StateSchoolID
-    ,LEAID AS NCESDistrictID
-    ,CONCAT(LSTATE08, '-', STID08) AS StateDistrictID
-    ,GSLO08 AS LowGrade
-    ,GSHI08 AS HighGrade
-    ,SCHNAM08 AS SchoolName
-    ,LEANM08 AS District
-    ,CONAME08 AS CountyName
-    ,LSTREE08 AS StreetAddress
-    ,LCITY08 as City
-    ,LSTATE08 AS State
-    ,LZIP08 AS ZIP
-    ,LZIP408 AS ZIP4
-    ,PHONE08 AS Phone
-    ,ULOCAL08 AS LocaleCode
-    ,'TODO' AS Locale
-    ,CASE WHEN CHARTR08 = '1' THEN 'Yes' ELSE 'No' END AS Charter
-    ,CASE WHEN MAGNET08 = '1' THEN 'Yes' ELSE 'No' END AS Magnet
-    ,CASE WHEN TITLEI08 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
-    ,CASE WHEN STITLI08 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
-    ,MEMBER08 AS Students
-    ,FTE08 AS Teachers
-    ,CAST(MEMBER08 as FLOAT) / CAST(FTE08 as FLOAT) AS StudentTeacherRatio
-    ,FRELCH08 AS FreeLunch
-    ,REDLCH08 AS ReducedLunch
-    -- additional fields not in School Locator format
-    ,LATCOD08 As Latitude
-    ,LONCOD08 as Longitude
- FROM schools2009
- 
-UNION ALL 
-
- SELECT
-    '2007-2008' AS AcademicYear
-    ,NCESSCH AS NCESSchoolID
-    ,CONCAT(LSTATE07, '-', STID07, '-', SEASCH07) AS StateSchoolID
-    ,LEAID AS NCESDistrictID
-    ,CONCAT(LSTATE07, '-', STID07) AS StateDistrictID
-    ,GSLO07 AS LowGrade
-    ,GSHI07 AS HighGrade
-    ,SCHNAM07 AS SchoolName
-    ,LEANM07 AS District
-    ,CONAME07 AS CountyName
-    ,LSTREE07 AS StreetAddress
-    ,LCITY07 as City
-    ,LSTATE07 AS State
-    ,LZIP07 AS ZIP
-    ,LZIP407 AS ZIP4
-    ,PHONE07 AS Phone
-    ,ULOCAL07 AS LocaleCode
-    ,'TODO' AS Locale
-    ,CASE WHEN CHARTR07 = '1' THEN 'Yes' ELSE 'No' END AS Charter
-    ,CASE WHEN MAGNET07 = '1' THEN 'Yes' ELSE 'No' END AS Magnet
-    ,CASE WHEN TITLEI07 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchool
-    ,CASE WHEN STITLI07 = '1' THEN 'Yes' ELSE 'No' END AS TitleISchoolWide
-    ,MEMBER07 AS Students
-    ,FTE07 AS Teachers
-    ,CAST(MEMBER07 as FLOAT) / CAST(FTE07 as FLOAT) AS StudentTeacherRatio
-    ,FRELCH07 AS FreeLunch
-    ,REDLCH07 AS ReducedLunch
-    -- additional fields not in School Locator format
-    ,LATCOD07 As Latitude
-    ,LONCOD07 as Longitude
- FROM schools2008
-
+        SELECT
+        *
+        FROM schools_2015_onwards
+    )
+    SELECT
+        AcademicYear
+        ,NCESSchoolID
+        ,StateSchoolID
+        ,NCESDistrictID
+        ,StateDistrictID
+        ,LowGrade
+        ,HighGrade
+        ,SchoolName
+        ,District
+        ,CountyName
+        ,StreetAddress
+        ,City
+        ,State
+        ,ZIP
+        ,ZIP4
+        ,Phone
+        -- null out Missing and N/A
+        ,CASE WHEN T.LocaleCode NOT IN ('M', 'N') THEN T.LocaleCode ELSE NULL END AS LocaleCode
+        ,lc.Locale
+        ,Charter
+        ,Magnet
+        ,TitleISchool
+        ,TitleISchoolWide
+        ,Students
+        ,Teachers
+        ,StudentTeacherRatio
+        ,FreeLunch
+        ,ReducedLunch
+        ,Latitude
+        ,Longitude
+    FROM T
+    LEFT JOIN locale_codes lc
+        ON T.LocaleCode = lc.LocaleCode
  ")
 
 # TODO: this outputs nulls as quoted empty strings (e.g. ""); figure out how to get regular empty string instead
