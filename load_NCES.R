@@ -39,7 +39,301 @@ sparkR.session(master = "local[8]", sparkConfig = list(spark.driver.memory = "2g
 
 input_dir <- "C:/Users/jchiu/NCES/input"
 
-num_partitions = 4
+#num_partitions = 32
+
+#### 2007 and prior
+
+schools2007 <- rbind(
+    read.df(paste(input_dir, "Sc061cai.dat", sep="/"), source="text")
+    ,read.df(paste(input_dir, "Sc061ckn.dat", sep="/"), source="text")
+    ,read.df(paste(input_dir, "Sc061cow.dat", sep="/"), source="text")
+)
+
+schools2006 <- rbind(
+    read.df(paste(input_dir, "Sc051aai.dat", sep="/"), source="text")
+    ,read.df(paste(input_dir, "Sc051akn.dat", sep="/"), source="text")
+    ,read.df(paste(input_dir, "Sc051aow.dat", sep="/"), source="text")
+)
+
+schools2005 <- rbind(
+    read.df(paste(input_dir, "sc041bai.dat", sep="/"), source="text")
+    ,read.df(paste(input_dir, "sc041bkn.dat", sep="/"), source="text")
+    ,read.df(paste(input_dir, "sc041bow.dat", sep="/"), source="text")
+)
+
+schools2004 <- rbind(
+    read.df(paste(input_dir, "sc031aai.txt", sep="/"), source="text")
+    ,read.df(paste(input_dir, "sc031akn.txt", sep="/"), source="text")
+    ,read.df(paste(input_dir, "sc031aow.txt", sep="/"), source="text")
+)
+
+schools2003 <- rbind(
+    read.df(paste(input_dir, "Sc021aai.txt", sep="/"), source="text")
+    ,read.df(paste(input_dir, "Sc021akn.txt", sep="/"), source="text")
+    ,read.df(paste(input_dir, "Sc021aow.txt", sep="/"), source="text")
+)
+
+schools2002 <- rbind(
+    read.df(paste(input_dir, "sc011aai.dat", sep="/"), source="text")
+    ,read.df(paste(input_dir, "sc011akn.dat", sep="/"), source="text")
+    ,read.df(paste(input_dir, "sc011aow.dat", sep="/"), source="text")
+)
+
+schools2001 <- rbind(
+    read.df(paste(input_dir, "sc001aai.dat", sep="/"), source="text")
+    ,read.df(paste(input_dir, "sc001akn.dat", sep="/"), source="text")
+    ,read.df(paste(input_dir, "sc001aow.dat", sep="/"), source="text")
+)
+
+colnames(schools2007) <- c("LINE")
+colnames(schools2006) <- c("LINE")
+colnames(schools2005) <- c("LINE")
+colnames(schools2004) <- c("LINE")
+colnames(schools2003) <- c("LINE")
+colnames(schools2002) <- c("LINE")
+colnames(schools2001) <- c("LINE")
+
+createOrReplaceTempView(schools2007,"schools2007")
+createOrReplaceTempView(schools2006,"schools2006")
+createOrReplaceTempView(schools2005,"schools2005")
+createOrReplaceTempView(schools2004,"schools2004")
+createOrReplaceTempView(schools2003,"schools2003")
+createOrReplaceTempView(schools2002,"schools2002")
+createOrReplaceTempView(schools2001,"schools2001")
+
+# these files have fixed-length fields, and the starting positions/lengths of fields vary a lot
+# across years, hence this horribleness
+
+schools_2007_and_prior <- sql("
+    WITH
+    schools_2003_to_2006 AS (
+        SELECT
+            '2002-2003' AS AcademicYear
+            ,*
+            ,RTRIM(SUBSTRING(LINE, 1446, 5)) AS StudentTeacherRatio
+        FROM schools2003
+        UNION ALL
+        SELECT
+            '2003-2004' AS AcademicYear
+            ,*
+            ,RTRIM(SUBSTRING(LINE, 1446, 5)) AS StudentTeacherRatio
+        FROM schools2004
+        UNION ALL
+        SELECT
+            '2004-2005' AS AcademicYear
+            ,*
+            ,RTRIM(SUBSTRING(LINE, 1447, 6)) AS StudentTeacherRatio
+        FROM schools2005
+        UNION ALL
+        SELECT
+            '2005-2006' AS AcademicYear
+            ,*
+            ,RTRIM(SUBSTRING(LINE, 1447, 5)) AS StudentTeacherRatio
+        FROM schools2006
+    )
+    ,Unioned as (
+        SELECT
+            LINE
+            ,'2000-2001' AS AcademicYear
+            ,RTRIM(SUBSTRING(LINE, 337, 2)) AS LowGrade
+            ,RTRIM(SUBSTRING(LINE, 339, 2)) AS HighGrade
+            -- TODO: County Name isn't a field in this year's file
+            ,NULL AS CountyName 
+            ,RTRIM(SUBSTRING(LINE, 311, 1)) AS LocaleCode
+            ,CASE RTRIM(SUBSTRING(LINE, 345, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS Charter
+            ,CASE RTRIM(SUBSTRING(LINE, 344, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS Magnet
+            ,CASE RTRIM(SUBSTRING(LINE, 342, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchool
+            ,CASE RTRIM(SUBSTRING(LINE, 343, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchoolWide
+            ,RTRIM(SUBSTRING(LINE, 1322, 4)) AS Students
+            ,RTRIM(SUBSTRING(LINE, 332, 5)) AS Teachers
+            ,RTRIM(SUBSTRING(LINE, 1410, 5)) AS StudentTeacherRatio
+            ,RTRIM(SUBSTRING(LINE, 346, 4)) AS FreeLunch
+            ,RTRIM(SUBSTRING(LINE, 350, 4)) AS ReducedLunch
+            ,TRIM(SUBSTRING(LINE, 312, 10)) AS Latitude
+            ,TRIM(SUBSTRING(LINE, 322, 10)) AS Longitude
+        FROM schools2001
+        UNION ALL
+        SELECT
+            LINE
+            ,'2001-2002' AS AcademicYear
+            ,RTRIM(SUBSTRING(LINE, 338, 2)) AS LowGrade
+            ,RTRIM(SUBSTRING(LINE, 340, 2)) AS HighGrade
+            -- TODO: County Name isn't a field in this year's file
+            ,NULL AS CountyName 
+            ,RTRIM(SUBSTRING(LINE, 311, 1)) AS LocaleCode
+            ,CASE RTRIM(SUBSTRING(LINE, 346, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS Charter
+            ,CASE RTRIM(SUBSTRING(LINE, 345, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS Magnet
+            ,CASE RTRIM(SUBSTRING(LINE, 343, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchool
+            ,CASE RTRIM(SUBSTRING(LINE, 344, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchoolWide
+            ,RTRIM(SUBSTRING(LINE, 1323, 4)) AS Students
+            ,RTRIM(SUBSTRING(LINE, 333, 5)) AS Teachers
+            ,RTRIM(SUBSTRING(LINE, 1411, 5)) AS StudentTeacherRatio
+            ,RTRIM(SUBSTRING(LINE, 347, 4)) AS FreeLunch
+            ,RTRIM(SUBSTRING(LINE, 351, 4)) AS ReducedLunch
+            ,TRIM(SUBSTRING(LINE, 313, 10)) AS Latitude
+            ,TRIM(SUBSTRING(LINE, 323, 10)) AS Longitude
+        FROM schools2002
+        UNION ALL
+        SELECT
+            LINE
+            ,AcademicYear
+            ,RTRIM(SUBSTRING(LINE, 373, 2)) AS LowGrade
+            ,RTRIM(SUBSTRING(LINE, 375, 2)) AS HighGrade
+            ,RTRIM(SUBSTRING(LINE, 338, 30)) AS CountyName
+            ,RTRIM(SUBSTRING(LINE, 311, 1)) AS LocaleCode
+            ,CASE RTRIM(SUBSTRING(LINE, 381, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS Charter
+            ,CASE RTRIM(SUBSTRING(LINE, 380, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS Magnet
+            ,CASE RTRIM(SUBSTRING(LINE, 378, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchool
+            ,CASE RTRIM(SUBSTRING(LINE, 379, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchoolWide
+            ,RTRIM(SUBSTRING(LINE, 1359, 4)) AS Students
+            ,RTRIM(SUBSTRING(LINE, 368, 5)) AS Teachers
+            ,StudentTeacherRatio
+            ,RTRIM(SUBSTRING(LINE, 383, 4)) AS FreeLunch
+            ,RTRIM(SUBSTRING(LINE, 387, 4)) AS ReducedLunch
+            ,TRIM(SUBSTRING(LINE, 313, 10)) AS Latitude
+            ,TRIM(SUBSTRING(LINE, 323, 10)) AS Longitude
+        FROM schools_2003_to_2006
+        UNION ALL
+        SELECT
+            LINE
+            ,'2006-2007' AS AcademicYear
+            ,RTRIM(SUBSTRING(LINE, 377, 2)) AS LowGrade
+            ,RTRIM(SUBSTRING(LINE, 379, 2)) AS HighGrade
+            ,RTRIM(SUBSTRING(LINE, 342, 30)) AS CountyName
+            ,RTRIM(SUBSTRING(LINE, 311, 2)) AS LocaleCode
+            ,CASE RTRIM(SUBSTRING(LINE, 385, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS Charter
+            ,CASE RTRIM(SUBSTRING(LINE, 384, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS Magnet
+            ,CASE RTRIM(SUBSTRING(LINE, 382, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchool
+            ,CASE RTRIM(SUBSTRING(LINE, 383, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchoolWide
+            ,RTRIM(SUBSTRING(LINE, 1363, 4)) AS Students
+            ,RTRIM(SUBSTRING(LINE, 372, 5)) AS Teachers
+            ,RTRIM(SUBSTRING(LINE, 1451, 6)) AS StudentTeacherRatio
+            ,RTRIM(SUBSTRING(LINE, 387, 4)) AS FreeLunch
+            ,RTRIM(SUBSTRING(LINE, 391, 4)) AS ReducedLunch
+            ,RTRIM(SUBSTRING(LINE, 313, 9)) AS Latitude
+            ,RTRIM(SUBSTRING(LINE, 322, 11)) AS Longitude
+        FROM schools2007
+    )
+    SELECT
+        AcademicYear
+        ,RTRIM(SUBSTRING(LINE, 1, 12)) AS NCESSchoolID
+        ,RTRIM(SUBSTRING(LINE, 27, 20)) AS StateSchoolID
+        ,RTRIM(SUBSTRING(LINE, 1, 7)) AS NCESDistrictID
+        ,RTRIM(SUBSTRING(LINE, 13, 14)) AS StateDistrictID
+        ,LowGrade
+        ,HighGrade
+        ,RTRIM(SUBSTRING(LINE, 107, 50)) AS SchoolName
+        ,RTRIM(SUBSTRING(LINE, 47, 60)) AS District
+        ,CountyName
+        ,RTRIM(SUBSTRING(LINE, 238, 30)) AS StreetAddress
+        ,RTRIM(SUBSTRING(LINE, 268, 30)) AS City
+        ,RTRIM(SUBSTRING(LINE, 298, 2)) AS State
+        ,RTRIM(SUBSTRING(LINE, 300, 5)) AS ZIP
+        ,RTRIM(SUBSTRING(LINE, 305, 4)) AS ZIP4
+        ,RTRIM(SUBSTRING(LINE, 157, 10)) AS Phone
+        ,LocaleCode
+        ,Charter
+        ,Magnet
+        ,TitleISchool
+        ,TitleISchoolWide
+        ,CAST(Students AS FLOAT) AS Students
+        ,CAST(Teachers AS FLOAT) AS Teachers
+        ,CAST(StudentTeacherRatio AS FLOAT) AS StudentTeacherRatio
+        ,CASE WHEN CAST(FreeLunch AS FLOAT) >= 0 THEN FreeLunch ELSE NULL END AS FreeLunch
+        ,CASE WHEN CAST(ReducedLunch AS FLOAT) >= 0 THEN ReducedLunch ELSE NULL END AS ReducedLunch      
+        ,CAST(CASE
+            WHEN Latitude <> 'N' THEN
+                CASE
+                    WHEN Latitude NOT LIKE '%.%' THEN
+                        CASE
+                            WHEN Latitude LIKE '%-%' THEN CONCAT(SUBSTRING(Latitude, 1, 4), '.', SUBSTRING(Latitude, 5))
+                            ELSE CONCAT(SUBSTRING(Latitude, 1, 3), '.', SUBSTRING(Latitude, 4))
+                        END
+                    ELSE Latitude
+                END
+            ELSE NULL
+        END AS Float) AS Latitude
+        ,CAST(CASE
+            WHEN Longitude <> 'N' THEN
+                CASE
+                    WHEN Longitude NOT LIKE '%.%' THEN
+                        CASE
+                            WHEN Longitude LIKE '%-%' THEN CONCAT(SUBSTRING(Longitude, 1, 4), '.', SUBSTRING(Longitude, 5))
+                            ELSE CONCAT(SUBSTRING(Longitude, 1, 3), '.', SUBSTRING(Longitude, 4))
+                        END
+                    ELSE Longitude
+                END
+            ELSE NULL
+        END AS Float) AS Longitude
+    FROM Unioned
+")
+
+createOrReplaceTempView(schools_2007_and_prior,"schools_2007_and_prior")
+
 
 #### 2008 - 2014
 #### these years had single files for CCD and variation in column names
@@ -555,7 +849,7 @@ directory <- sql("
     FROM directory2015
     ")
 
-repartition(directory, numPartitions = num_partitions)
+#repartition(directory, numPartitions = num_partitions)
 
 createOrReplaceTempView(directory, "directory")
 
@@ -594,7 +888,7 @@ characteristics <- sql("
     FROM characteristics2015
     ")
 
-characteristics <- repartition(characteristics, numPartitions = num_partitions)
+#characteristics <- repartition(characteristics, numPartitions = num_partitions)
 
 createOrReplaceTempView(characteristics, "characteristics")
 
@@ -630,7 +924,7 @@ staff <- sql("
     FROM staff2015
     ")
 
-staff <- repartition(staff, numPartitions = num_partitions)
+#staff <- repartition(staff, numPartitions = num_partitions)
 
 createOrReplaceTempView(staff, "staff")
 
@@ -667,7 +961,7 @@ membership <- sql("
     FROM membership2015
     ")
 
-membership <- repartition(membership, numPartitions = num_partitions)
+#membership <- repartition(membership, numPartitions = num_partitions)
 
 createOrReplaceTempView(membership, "membership")
 
@@ -906,6 +1200,12 @@ createOrReplaceTempView(
 
 final <- sql("
     WITH T AS (
+        SELECT
+        *
+        FROM schools_2007_and_prior
+
+        UNION ALL
+
         SELECT
         *
         FROM schools_2008_2014

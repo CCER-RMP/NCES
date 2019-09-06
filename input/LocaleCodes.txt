@@ -1,4 +1,12 @@
 LocaleCode	Locale
+1	Large city
+2	Midsize city
+3	Urban fringe of a large city
+4	Urban fringe of a midsize city
+5	Large town
+6	Small town
+7	Rural, outside CBSA
+8	Rural, inside CBSA
 11	City: Large
 12	City: Midsize
 13	City: Small

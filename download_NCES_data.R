@@ -72,6 +72,41 @@ urls <- c(
 	,"https://nces.ed.gov/ccd/data/zip/sc081b_txt.zip"
 	# 2008
 	,"https://nces.ed.gov/ccd/data/zip/sc071b_txt.zip"
+
+	# 2007
+	,"https://nces.ed.gov/ccd/data/zip/sc061cai_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc061ckn_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc061cow_dat.zip"
+
+	# 2006
+	,"https://nces.ed.gov/ccd/data/zip/sc051aai_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc051akn_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc051aow_dat.zip"
+
+	# 2005
+	,"https://nces.ed.gov/ccd/data/zip/sc041bai_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc041bkn_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc041bow_dat.zip"
+
+	# 2004
+	,"https://nces.ed.gov/ccd/data/zip/sc031aai_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc031akn_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc031aow_dat.zip"
+
+	# 2003
+	,"https://nces.ed.gov/ccd/data/zip/sc021aai_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc021akn_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc021aow_dat.zip"
+
+	# 2002
+	,"https://nces.ed.gov/ccd/data/zip/sc011aai_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc011akn_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc011aow_dat.zip"
+
+	# 2001
+	,"https://nces.ed.gov/ccd/data/zip/sc001aai_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc001akn_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc001aow_dat.zip"
 )
 
 for(url in urls) {
