@@ -1263,8 +1263,8 @@ final <- sql("
         ,StudentTeacherRatio
         ,FreeLunch
         ,ReducedLunch
-        ,Latitude
-        ,Longitude
+        ,CASE WHEN CAST(Latitude AS Float) > 0 THEN Latitude ELSE NULL END as Latitude
+        ,CASE WHEN CAST(Longitude AS Float) > 0 THEN Longitude ELSE NULL END as Longitude
     FROM T
     LEFT JOIN locale_codes lc
         ON T.LocaleCode = lc.LocaleCode
