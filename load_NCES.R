@@ -1,23 +1,28 @@
 
 #### This section is only needed when running interactively in R Studio
 
-if(!grepl("C:/Program Files/R/", Sys.getenv("PATH"))) {
-    Sys.setenv(PATH = paste(Sys.getenv("PATH"), "C:/Program Files/R/R-3.4.4/bin", sep=";"))
-}
+if(Sys.info()["sysname"] == "Windows") {
+    if(!grepl("C:/Program Files/R/", Sys.getenv("PATH"))) {
+        Sys.setenv(PATH = paste(Sys.getenv("PATH"), "C:/Program Files/R/R-3.4.4/bin", sep=";"))
+    }
 
-if (nchar(Sys.getenv("HADOOP_HOME")) < 1) {
-    Sys.setenv(HADOOP_HOME = "C:/Users/jchiu/spark-2.4.3-bin-hadoop2.7")
-}
+    if (nchar(Sys.getenv("HADOOP_HOME")) < 1) {
+        Sys.setenv(HADOOP_HOME = "C:/Users/jchiu/spark-2.4.3-bin-hadoop2.7")
+    }
 
-if (nchar(Sys.getenv("SPARK_HOME")) < 1) {
-  Sys.setenv(SPARK_HOME = "C:/Users/jchiu/spark-2.4.3-bin-hadoop2.7")
+    if (nchar(Sys.getenv("SPARK_HOME")) < 1) {
+      Sys.setenv(SPARK_HOME = "C:/Users/jchiu/spark-2.4.3-bin-hadoop2.7")
+    }
 }
 
 #### end section
 
-library(SparkR, lib.loc = c(file.path(Sys.getenv("SPARK_HOME"), "R", "lib")))
-library(readxl)
+# it's weird to always install when we run, but spark-submit running R doesn't pick up packrat.
+# see https://issues.apache.org/jira/browse/SPARK-17428
+install.packages("here")
 
+library(here)
+library(SparkR, lib.loc = c(file.path(Sys.getenv("SPARK_HOME"), "R", "lib")))
 
 writeSparkTSV <- function(df, path) {
     # the key to correctly outputting NA values as unquoted empty strings is to use the "emptyValue" option
@@ -37,7 +42,7 @@ writeSparkTSV <- function(df, path) {
 
 sparkR.session(master = "local[8]", sparkConfig = list(spark.driver.memory = "2g"))
 
-input_dir <- "C:/Users/jchiu/NCES/input"
+input_dir <- here("input")
 
 #num_partitions = 32
 

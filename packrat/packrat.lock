@@ -24,6 +24,11 @@ Source: CRAN
 Version: 0.2.1
 Hash: 622be49032fe50bd42e96aaef613e209
 
+Package: backports
+Source: CRAN
+Version: 1.1.4
+Hash: e88df919a68845e664e019570e2251b6
+
 Package: cellranger
 Source: CRAN
 Version: 1.1.0
@@ -45,6 +50,12 @@ Package: fansi
 Source: CRAN
 Version: 0.4.0
 Hash: f147621f72b561485bfffcae78c4f5d5
+
+Package: here
+Source: CRAN
+Version: 0.1
+Hash: 90e1a97508a0d7383b0eeb11e397e763
+Requires: rprojroot
 
 Package: hms
 Source: CRAN
@@ -100,6 +111,12 @@ Package: rlang
 Source: CRAN
 Version: 0.3.4
 Hash: 6a5220d1a973463418286038095d8c0b
+
+Package: rprojroot
+Source: CRAN
+Version: 1.3-2
+Hash: a25c3f70c166fb3fbabc410eb32b6366
+Requires: backports
 
 Package: tibble
 Source: CRAN

@@ -1,4 +1,5 @@
 
+library(here)
 library(readxl)
 
 ## Write to delimited file; default to tabs
@@ -22,8 +23,7 @@ writeToTsv <- function(filename, df) {
   writeToDelimitedFile(filename, df)
 }
 
-
-input_dir <- "C:/Users/jchiu/NCES/input"
+input_dir <- here("input")
 
 urls <- c(
 	# from 2015 to 2018, there are 5 files in common core, and a separate geocode file
