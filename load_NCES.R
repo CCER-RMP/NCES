@@ -1116,15 +1116,33 @@ schools_2015_onwards <- sql("
             	ELSE NULL
             END AS Magnet
             ,CASE
-            	WHEN c.TITLEI_STATUS IN ('SWELIGNOPROG', 'SWELIGTGPROG', 'TGELGBNOPROG', 'TGELGBTGPROG') THEN 'Yes'
-                WHEN c.TITLEI_STATUS IN ('NOTTITLE1ELIG') THEN 'No'
-            	ELSE NULL
+                WHEN d.SCHOOL_YEAR IN ('2014-2015', '2015-2016') THEN
+                    CASE
+                        WHEN c.TITLEI_STATUS IN ('1', '2', '3', '4', '5') THEN 'Yes'
+                        WHEN c.TITLEI_STATUS IN ('6') THEN 'No'
+                        ELSE NULL
+                    END 
+                ELSE
+                    CASE
+                    	WHEN c.TITLEI_STATUS IN ('SWELIGNOPROG', 'SWELIGTGPROG', 'TGELGBNOPROG', 'TGELGBTGPROG') THEN 'Yes'
+                        WHEN c.TITLEI_STATUS IN ('NOTTITLE1ELIG') THEN 'No'
+                    	ELSE NULL
+                    END
             END AS TitleISchool
             -- TODO: School Locator has 'not applicable' values for School Wide; not sure what the logic is for this. we set it to No.
             ,CASE
-            	WHEN c.TITLEI_STATUS IN  ('SWELIGNOPROG', 'SWELIGSWPROG', 'SWELIGTGPROG') THEN 'Yes'
-                WHEN c.TITLEI_STATUS IN ('TGELGBNOPROG', 'TGELGBTGPROG', 'NOTTITLE1ELIG') THEN 'No'
-            	ELSE NULL
+                WHEN d.SCHOOL_YEAR IN ('2014-2015', '2015-2016') THEN
+                    CASE
+                        WHEN c.TITLEI_STATUS IN ('3', '4', '5') THEN 'Yes'
+                        WHEN c.TITLEI_STATUS IN ('6') THEN 'No'
+                        ELSE NULL
+                    END 
+                ELSE
+                    CASE
+                        WHEN c.TITLEI_STATUS IN ('SWELIGNOPROG', 'SWELIGSWPROG', 'SWELIGTGPROG') THEN 'Yes'
+                        WHEN c.TITLEI_STATUS IN ('TGELGBNOPROG', 'TGELGBTGPROG', 'NOTTITLE1ELIG') THEN 'No'
+                        ELSE NULL
+                    END
             END AS TitleISchoolWide
             ,CASE WHEN CAST(m.STUDENT_COUNT as INT) >= 0 THEN m.STUDENT_COUNT ELSE NULL END AS Students
             ,CASE WHEN CAST(s.TEACHERS as INT) >= 0 THEN s.TEACHERS ELSE NULL END AS Teachers
