@@ -31,6 +31,12 @@ cd NCES
 Import-Module -Force .\NCES_ETL
 ```
 
+- Install required R libraries (you only need to run this once)
+
+```
+Install-NCESRLibraries
+```
+
 - Download NCES files and unpack them into the `input/` directory:
 
 ```

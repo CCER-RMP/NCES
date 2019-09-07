@@ -19,7 +19,9 @@ if(Sys.info()["sysname"] == "Windows") {
 
 # it's weird to always install when we run, but spark-submit running R doesn't pick up packrat.
 # see https://issues.apache.org/jira/browse/SPARK-17428
-install.packages("here")
+if(! "here" %in% rownames(installed.packages())) {
+    install.packages("here", repo = "https://cloud.r-project.org/")
+}
 
 library(here)
 library(SparkR, lib.loc = c(file.path(Sys.getenv("SPARK_HOME"), "R", "lib")))

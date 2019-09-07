@@ -9,6 +9,12 @@ Function Get-RLocation {
     return $Script:RLocation
 }
 
+Function Install-NCESRLibraries {
+    $rbinpath = Join-Path $(Get-RLocation) "bin"
+
+    . "$rbinpath\Rscript.exe" -e "packrat::restore()"
+}
+
 Function Invoke-NCESETL {
 
     $rbinpath = Join-Path $(Get-RLocation) "bin"
