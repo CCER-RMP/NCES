@@ -107,6 +107,12 @@ urls <- c(
 	,"https://nces.ed.gov/ccd/data/zip/sc001aai_dat.zip"
 	,"https://nces.ed.gov/ccd/data/zip/sc001akn_dat.zip"
 	,"https://nces.ed.gov/ccd/data/zip/sc001aow_dat.zip"
+
+	# 2000
+	,"https://nces.ed.gov/ccd/data/zip/sc991bai_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc991bkn_dat.zip"
+	,"https://nces.ed.gov/ccd/data/zip/sc991bow_dat.zip"
+
 )
 
 for(url in urls) {

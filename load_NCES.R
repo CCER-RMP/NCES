@@ -85,6 +85,12 @@ schools2001 <- rbind(
     ,read.df(paste(input_dir, "sc001aow.dat", sep="/"), source="text")
 )
 
+schools2000 <- rbind(
+    read.df(paste(input_dir, "sc991bai.dat", sep="/"), source="text")
+    ,read.df(paste(input_dir, "sc991bkn.dat", sep="/"), source="text")
+    ,read.df(paste(input_dir, "sc991bow.dat", sep="/"), source="text")
+)
+
 colnames(schools2007) <- c("LINE")
 colnames(schools2006) <- c("LINE")
 colnames(schools2005) <- c("LINE")
@@ -92,6 +98,7 @@ colnames(schools2004) <- c("LINE")
 colnames(schools2003) <- c("LINE")
 colnames(schools2002) <- c("LINE")
 colnames(schools2001) <- c("LINE")
+colnames(schools2000) <- c("LINE")
 
 createOrReplaceTempView(schools2007,"schools2007")
 createOrReplaceTempView(schools2006,"schools2006")
@@ -100,6 +107,7 @@ createOrReplaceTempView(schools2004,"schools2004")
 createOrReplaceTempView(schools2003,"schools2003")
 createOrReplaceTempView(schools2002,"schools2002")
 createOrReplaceTempView(schools2001,"schools2001")
+createOrReplaceTempView(schools2000,"schools2000")
 
 # these files have fixed-length fields, and the starting positions/lengths of fields vary a lot
 # across years, hence this horribleness
@@ -132,6 +140,44 @@ schools_2007_and_prior <- sql("
         FROM schools2006
     )
     ,Unioned as (
+        SELECT
+            LINE
+            ,'1999-2000' AS AcademicYear
+            ,RTRIM(SUBSTRING(LINE, 317, 2)) AS LowGrade
+            ,RTRIM(SUBSTRING(LINE, 319, 2)) AS HighGrade
+            -- TODO: County Name isn't a field in this year's file
+            ,NULL AS CountyName 
+            ,RTRIM(SUBSTRING(LINE, 311, 1)) AS LocaleCode
+            ,CASE RTRIM(SUBSTRING(LINE, 324, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS Charter
+            ,CASE RTRIM(SUBSTRING(LINE, 323, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS Magnet
+            ,CASE RTRIM(SUBSTRING(LINE, 321, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchool
+            ,CASE RTRIM(SUBSTRING(LINE, 322, 1))
+                WHEN '1' THEN 'Yes'
+                WHEN '2' THEN 'No'
+                ELSE NULL
+            END AS TitleISchoolWide
+            ,RTRIM(SUBSTRING(LINE, 1301, 4)) AS Students
+            ,RTRIM(SUBSTRING(LINE, 312, 5)) AS Teachers
+            ,RTRIM(SUBSTRING(LINE, 1389, 5)) AS StudentTeacherRatio
+            ,RTRIM(SUBSTRING(LINE, 325, 4)) AS FreeLunch
+            ,RTRIM(SUBSTRING(LINE, 329, 4)) AS ReducedLunch
+            -- no lat/lng in 2000 and prior
+            ,NULL AS Latitude
+            ,NULL AS Longitude
+        FROM schools2000
+        UNION ALL
         SELECT
             LINE
             ,'2000-2001' AS AcademicYear
