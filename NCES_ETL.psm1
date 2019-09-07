@@ -19,7 +19,14 @@ Function Invoke-NCESETL {
     $Env:HADOOP_HOME = "$Env:HOME\spark-2.4.3-bin-hadoop2.7"
     $Env:SPARK_HOME = "$Env:HOME\spark-2.4.3-bin-hadoop2.7"
 
+    $start = $(Get-Date)
+
     . "$Env:SPARK_HOME\bin\spark-submit.cmd" --master local[*] load_NCES.R
+
+    $end = $(Get-Date)
+    $elapsedTime = $end - $start
+    $totalTime = "{0:HH:mm:ss}" -f ([datetime]$elapsedTime.Ticks)
+    Write-Output "Took $totalTime"
 }
 
 Function Get-NCESData {
