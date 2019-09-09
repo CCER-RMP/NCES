@@ -71,7 +71,7 @@ Function Import-NCESData {
     }
 }
 
-Function Invoke-NCESMaster {
+Function Start-NCESMaster {
     # experimenting with standalone cluster mode
     $rbinpath = Join-Path $(Get-RLocation) "bin"
 
@@ -84,7 +84,7 @@ Function Invoke-NCESMaster {
    . "$Env:SPARK_HOME\bin\spark-class" org.apache.spark.deploy.master.Master
 }
 
-Function Invoke-NCESWorker {
+Function Start-NCESWorker {
     # experimenting with standalone cluster mode
     $rbinpath = Join-Path $(Get-RLocation) "bin"
 
@@ -95,4 +95,22 @@ Function Invoke-NCESWorker {
     $Env:SPARK_HOME = "$Env:HOME\spark-2.4.3-bin-hadoop2.7"
 
    . "$Env:SPARK_HOME\bin\spark-class" org.apache.spark.deploy.worker.Worker $(Get-NCESClusterURL) --cores 1 --memory 1G
+}
+
+Function Start-NCESCluster {
+    Param(
+        [Int] $Workers = -1
+    )
+
+    if($Workers -Eq -1) {
+        Get-WmiObject –class Win32_processor | ft systemname,Name,DeviceID,NumberOfCores,NumberOfLogicalProcessors, Addresswidth
+        $Workers = $(Get-WmiObject –class Win32_processor).NumberOfLogicalProcessors
+    }
+
+    Start-NCESMaster
+    Start-Sleep 5
+    For ($i=0; $i -lt $Workers; $i++) {
+        Start-NCESWorker
+        Start-Sleep 2
+    }
 }
