@@ -7,11 +7,11 @@ if(Sys.info()["sysname"] == "Windows") {
     }
 
     if (nchar(Sys.getenv("HADOOP_HOME")) < 1) {
-        Sys.setenv(HADOOP_HOME = "C:/Users/jchiu/spark-2.4.3-bin-hadoop2.7")
+        Sys.setenv(HADOOP_HOME = file.path(Sys.getenv("HOME"), "spark-2.4.3-bin-hadoop2.7"))
     }
 
     if (nchar(Sys.getenv("SPARK_HOME")) < 1) {
-      Sys.setenv(SPARK_HOME = "C:/Users/jchiu/spark-2.4.3-bin-hadoop2.7")
+        Sys.setenv(SPARK_HOME = file.path(Sys.getenv("HOME"), "spark-2.4.3-bin-hadoop2.7"))
     }
 }
 
@@ -42,7 +42,7 @@ writeSparkTSV <- function(df, path) {
 }
 
 
-sparkR.session(master = "local[8]", sparkConfig = list(spark.driver.memory = "2g"))
+sparkR.session()
 
 input_dir <- here("input")
 
