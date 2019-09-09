@@ -1177,7 +1177,7 @@ schools_2015_onwards <- sql("
                     END 
                 ELSE
                     CASE
-                    	WHEN c.TITLEI_STATUS IN ('SWELIGNOPROG', 'SWELIGTGPROG', 'TGELGBNOPROG', 'TGELGBTGPROG') THEN 'Yes'
+                        WHEN c.TITLEI_STATUS IN ('SWELIGNOPROG', 'SWELIGSWPROG', 'SWELIGTGPROG', 'TGELGBNOPROG', 'TGELGBTGPROG') THEN 'Yes'
                         WHEN c.TITLEI_STATUS IN ('NOTTITLE1ELIG') THEN 'No'
                     	ELSE NULL
                     END
