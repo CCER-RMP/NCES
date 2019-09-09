@@ -42,7 +42,8 @@ writeSparkTSV <- function(df, path) {
 }
 
 
-sparkR.session()
+# set high value for spark.sql.autoBroadcastJoinThreshold to help with high cardinality joins; faster, but uses a lot of memory
+sparkR.session(sparkConfig = list(spark.sql.autoBroadcastJoinThreshold = "524288000"))
 
 input_dir <- here("input")
 
