@@ -1359,6 +1359,26 @@ final <- sql("
         ON T.LocaleCode = lc.LocaleCode
  ")
 
+createOrReplaceTempView(final,"final")
+
+#cache(final)
+
+# validation <- sql("
+#     select *
+#     from final where
+#         not (charter is null OR charter in ('Yes', 'No'))
+#         or not (magnet is null OR Magnet in ('Yes', 'No'))
+#         or not (TitleISchool is null OR TitleISchool in ('Yes', 'No'))
+#         or not (TitleISchoolWide is null OR TitleISchoolWide in ('Yes', 'No'))
+#         OR (students is not null and cast(students as float) < 0.0)
+#         OR (teachers is not null and cast(teachers as float) < 0.0)
+#         OR (freelunch is not null and cast(freelunch as float) < 0.0)
+#         or (reducedlunch is not null and cast(Reducedlunch as float) < 0.0)
+# ")
+# if(nrow(validation) > 0) {
+#     stop("Found bad values")
+# }
+
 writeSparkTSV(final, "output/NCESSchools")
 
 sparkR.session.stop()
