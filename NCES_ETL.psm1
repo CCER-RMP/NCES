@@ -15,7 +15,16 @@ Function Install-NCESRLibraries {
     . "$rbinpath\Rscript.exe" -e "packrat::restore()"
 }
 
+Function Get-NCESClusterURL {
+    $ip = $(Get-NetIPAddress -AddressFamily IPv4)[0].IPAddress
+
+    return "spark://$($ip):7077"
+}
+
 Function Invoke-NCESETL {
+    Param(
+        [Switch] $Cluster = $false
+    )
 
     $rbinpath = Join-Path $(Get-RLocation) "bin"
 
@@ -27,7 +36,12 @@ Function Invoke-NCESETL {
 
     $start = $(Get-Date)
 
-    . "$Env:SPARK_HOME\bin\spark-submit.cmd" --master local[*] load_NCES.R
+    $master = "local[*]"
+    if($Cluster) {
+        $master = Get-NCESClusterURL
+    }
+
+    . "$Env:SPARK_HOME\bin\spark-submit.cmd" --master $master load_NCES.R
 
     $end = $(Get-Date)
     $elapsedTime = $end - $start
@@ -55,4 +69,30 @@ Function Import-NCESData {
         }
         $first = $false
     }
+}
+
+Function Invoke-NCESMaster {
+    # experimenting with standalone cluster mode
+    $rbinpath = Join-Path $(Get-RLocation) "bin"
+
+    if($Env:PATH.IndexOf($path) -Eq -1) {
+        $Env:PATH = "$Env:PATH;$rbinpath"
+    }
+    $Env:HADOOP_HOME = "$Env:HOME\spark-2.4.3-bin-hadoop2.7"
+    $Env:SPARK_HOME = "$Env:HOME\spark-2.4.3-bin-hadoop2.7"
+
+   . "$Env:SPARK_HOME\bin\spark-class" org.apache.spark.deploy.master.Master
+}
+
+Function Invoke-NCESWorker {
+    # experimenting with standalone cluster mode
+    $rbinpath = Join-Path $(Get-RLocation) "bin"
+
+    if($Env:PATH.IndexOf($path) -Eq -1) {
+        $Env:PATH = "$Env:PATH;$rbinpath"
+    }
+    $Env:HADOOP_HOME = "$Env:HOME\spark-2.4.3-bin-hadoop2.7"
+    $Env:SPARK_HOME = "$Env:HOME\spark-2.4.3-bin-hadoop2.7"
+
+   . "$Env:SPARK_HOME\bin\spark-class" org.apache.spark.deploy.worker.Worker $(Get-NCESClusterURL) --cores 1 --memory 1G
 }
