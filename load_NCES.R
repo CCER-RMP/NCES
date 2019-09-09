@@ -147,44 +147,44 @@ schools_2007_and_prior <- sql("
         FROM schools2006
     )
     ,Unioned as (
-        SELECT
-            LINE
-            ,'1999-2000' AS AcademicYear
-            ,RTRIM(SUBSTRING(LINE, 317, 2)) AS LowGrade
-            ,RTRIM(SUBSTRING(LINE, 319, 2)) AS HighGrade
-            -- TODO: County Name isn't a field in this year's file
-            ,NULL AS CountyName 
-            ,RTRIM(SUBSTRING(LINE, 311, 1)) AS LocaleCode
-            ,CASE RTRIM(SUBSTRING(LINE, 324, 1))
-                WHEN '1' THEN 'Yes'
-                WHEN '2' THEN 'No'
-                ELSE NULL
-            END AS Charter
-            ,CASE RTRIM(SUBSTRING(LINE, 323, 1))
-                WHEN '1' THEN 'Yes'
-                WHEN '2' THEN 'No'
-                ELSE NULL
-            END AS Magnet
-            ,CASE RTRIM(SUBSTRING(LINE, 321, 1))
-                WHEN '1' THEN 'Yes'
-                WHEN '2' THEN 'No'
-                ELSE NULL
-            END AS TitleISchool
-            ,CASE RTRIM(SUBSTRING(LINE, 322, 1))
-                WHEN '1' THEN 'Yes'
-                WHEN '2' THEN 'No'
-                ELSE NULL
-            END AS TitleISchoolWide
-            ,RTRIM(SUBSTRING(LINE, 1301, 4)) AS Students
-            ,RTRIM(SUBSTRING(LINE, 312, 5)) AS Teachers
-            ,RTRIM(SUBSTRING(LINE, 1389, 5)) AS StudentTeacherRatio
-            ,RTRIM(SUBSTRING(LINE, 325, 4)) AS FreeLunch
-            ,RTRIM(SUBSTRING(LINE, 329, 4)) AS ReducedLunch
-            -- no lat/lng in 2000 and prior
-            ,NULL AS Latitude
-            ,NULL AS Longitude
-        FROM schools2000
-        UNION ALL
+--        SELECT
+--            LINE
+--            ,'1999-2000' AS AcademicYear
+--            ,RTRIM(SUBSTRING(LINE, 317, 2)) AS LowGrade
+--            ,RTRIM(SUBSTRING(LINE, 319, 2)) AS HighGrade
+--            -- TODO: County Name isn't a field in this year's file
+--            ,NULL AS CountyName 
+--            ,RTRIM(SUBSTRING(LINE, 311, 1)) AS LocaleCode
+--            ,CASE RTRIM(SUBSTRING(LINE, 324, 1))
+--                WHEN '1' THEN 'Yes'
+--                WHEN '2' THEN 'No'
+--                ELSE NULL
+--            END AS Charter
+--            ,CASE RTRIM(SUBSTRING(LINE, 323, 1))
+--                WHEN '1' THEN 'Yes'
+--                WHEN '2' THEN 'No'
+--                ELSE NULL
+--            END AS Magnet
+--            ,CASE RTRIM(SUBSTRING(LINE, 321, 1))
+--                WHEN '1' THEN 'Yes'
+--                WHEN '2' THEN 'No'
+--                ELSE NULL
+--            END AS TitleISchool
+--            ,CASE RTRIM(SUBSTRING(LINE, 322, 1))
+--                WHEN '1' THEN 'Yes'
+--                WHEN '2' THEN 'No'
+--                ELSE NULL
+--            END AS TitleISchoolWide
+--            ,RTRIM(SUBSTRING(LINE, 1301, 4)) AS Students
+--            ,RTRIM(SUBSTRING(LINE, 312, 5)) AS Teachers
+--            ,RTRIM(SUBSTRING(LINE, 1389, 5)) AS StudentTeacherRatio
+--            ,RTRIM(SUBSTRING(LINE, 325, 4)) AS FreeLunch
+--            ,RTRIM(SUBSTRING(LINE, 329, 4)) AS ReducedLunch
+--            -- no lat/lng in 2000 and prior
+--            ,NULL AS Latitude
+--            ,NULL AS Longitude
+--        FROM schools2000
+--        UNION ALL
         SELECT
             LINE
             ,'2000-2001' AS AcademicYear
