@@ -48,3 +48,17 @@ Get-NCESData
 ```
 Invoke-NCESETL
 ```
+
+# Notes
+
+AcademicYear values below are based on the "end year": e.g. 2016 means 2015-2016.
+
+Earliest year loaded is 2001. Prior to that, there are no geolocation fields,
+so they aren't very useful for our purposes. But the code could be extended to
+load earlier data.
+
+Note that there are inaccuracies/missing values for various year/district/school
+combinations. In particular:
+- Numbers for FreeLunch in 2005 and 2007 are abnormally low compared to other years
+
+'Missing' and 'Not applicable' are converted to NULLs.
