@@ -331,58 +331,90 @@ schools_2007_and_prior <- sql("
             ,RTRIM(SUBSTRING(LINE, 322, 11)) AS Longitude
         FROM schools2007
     )
+    ,Named AS (
+        SELECT
+            AcademicYear
+            ,RTRIM(SUBSTRING(LINE, 1, 12)) AS NCESSchoolID
+            ,RTRIM(SUBSTRING(LINE, 27, 20)) AS StateSchoolID
+            ,RTRIM(SUBSTRING(LINE, 1, 7)) AS NCESDistrictID
+            ,RTRIM(SUBSTRING(LINE, 13, 14)) AS StateDistrictID
+            ,LowGrade
+            ,HighGrade
+            ,RTRIM(SUBSTRING(LINE, 107, 50)) AS SchoolName
+            ,RTRIM(SUBSTRING(LINE, 47, 60)) AS District
+            ,CountyName
+            ,RTRIM(SUBSTRING(LINE, 238, 30)) AS StreetAddress
+            ,RTRIM(SUBSTRING(LINE, 268, 30)) AS City
+            ,RTRIM(SUBSTRING(LINE, 298, 2)) AS State
+            ,RTRIM(SUBSTRING(LINE, 300, 5)) AS ZIP
+            ,RTRIM(SUBSTRING(LINE, 305, 4)) AS ZIP4
+            ,RTRIM(SUBSTRING(LINE, 157, 10)) AS Phone
+            ,LocaleCode
+            ,Charter
+            ,Magnet
+            ,TitleISchool
+            ,TitleISchoolWide
+            ,CAST(Students AS FLOAT) AS Students
+            ,CAST(Teachers AS FLOAT) AS Teachers
+            ,CAST(StudentTeacherRatio AS FLOAT) AS StudentTeacherRatio
+            ,CASE WHEN CAST(FreeLunch AS FLOAT) >= 0 THEN FreeLunch ELSE NULL END AS FreeLunch
+            ,CASE WHEN CAST(ReducedLunch AS FLOAT) >= 0 THEN ReducedLunch ELSE NULL END AS ReducedLunch      
+            ,CAST(CASE
+                WHEN Latitude <> 'N' THEN
+                    CASE
+                        WHEN Latitude NOT LIKE '%.%' THEN
+                            CASE
+                                WHEN Latitude LIKE '%-%' THEN CONCAT(SUBSTRING(Latitude, 1, 4), '.', SUBSTRING(Latitude, 5))
+                                ELSE CONCAT(SUBSTRING(Latitude, 1, 3), '.', SUBSTRING(Latitude, 4))
+                            END
+                        ELSE Latitude
+                    END
+                ELSE NULL
+            END AS Float) AS Latitude
+            ,CAST(CASE
+                WHEN Longitude <> 'N' THEN
+                    CASE
+                        WHEN Longitude NOT LIKE '%.%' THEN
+                            CASE
+                                WHEN Longitude LIKE '%-%' THEN CONCAT(SUBSTRING(Longitude, 1, 4), '.', SUBSTRING(Longitude, 5))
+                                ELSE CONCAT(SUBSTRING(Longitude, 1, 3), '.', SUBSTRING(Longitude, 4))
+                            END
+                        ELSE Longitude
+                    END
+                ELSE NULL
+            END AS Float) AS Longitude
+        FROM Unioned
+    )
     SELECT
         AcademicYear
-        ,RTRIM(SUBSTRING(LINE, 1, 12)) AS NCESSchoolID
-        ,RTRIM(SUBSTRING(LINE, 27, 20)) AS StateSchoolID
-        ,RTRIM(SUBSTRING(LINE, 1, 7)) AS NCESDistrictID
-        ,RTRIM(SUBSTRING(LINE, 13, 14)) AS StateDistrictID
+        ,NCESSchoolID
+        ,CONCAT(State, '-', StateDistrictID, '-', StateSchoolID) AS StateSchoolID
+        ,NCESDistrictID
+        ,CONCAT(State, '-', StateDistrictID) AS StateDistrictID
         ,LowGrade
         ,HighGrade
-        ,RTRIM(SUBSTRING(LINE, 107, 50)) AS SchoolName
-        ,RTRIM(SUBSTRING(LINE, 47, 60)) AS District
+        ,SchoolName
+        ,District
         ,CountyName
-        ,RTRIM(SUBSTRING(LINE, 238, 30)) AS StreetAddress
-        ,RTRIM(SUBSTRING(LINE, 268, 30)) AS City
-        ,RTRIM(SUBSTRING(LINE, 298, 2)) AS State
-        ,RTRIM(SUBSTRING(LINE, 300, 5)) AS ZIP
-        ,RTRIM(SUBSTRING(LINE, 305, 4)) AS ZIP4
-        ,RTRIM(SUBSTRING(LINE, 157, 10)) AS Phone
+        ,StreetAddress
+        ,City
+        ,State
+        ,ZIP
+        ,ZIP4
+        ,Phone
         ,LocaleCode
         ,Charter
         ,Magnet
         ,TitleISchool
         ,TitleISchoolWide
-        ,CAST(Students AS FLOAT) AS Students
-        ,CAST(Teachers AS FLOAT) AS Teachers
-        ,CAST(StudentTeacherRatio AS FLOAT) AS StudentTeacherRatio
-        ,CASE WHEN CAST(FreeLunch AS FLOAT) >= 0 THEN FreeLunch ELSE NULL END AS FreeLunch
-        ,CASE WHEN CAST(ReducedLunch AS FLOAT) >= 0 THEN ReducedLunch ELSE NULL END AS ReducedLunch      
-        ,CAST(CASE
-            WHEN Latitude <> 'N' THEN
-                CASE
-                    WHEN Latitude NOT LIKE '%.%' THEN
-                        CASE
-                            WHEN Latitude LIKE '%-%' THEN CONCAT(SUBSTRING(Latitude, 1, 4), '.', SUBSTRING(Latitude, 5))
-                            ELSE CONCAT(SUBSTRING(Latitude, 1, 3), '.', SUBSTRING(Latitude, 4))
-                        END
-                    ELSE Latitude
-                END
-            ELSE NULL
-        END AS Float) AS Latitude
-        ,CAST(CASE
-            WHEN Longitude <> 'N' THEN
-                CASE
-                    WHEN Longitude NOT LIKE '%.%' THEN
-                        CASE
-                            WHEN Longitude LIKE '%-%' THEN CONCAT(SUBSTRING(Longitude, 1, 4), '.', SUBSTRING(Longitude, 5))
-                            ELSE CONCAT(SUBSTRING(Longitude, 1, 3), '.', SUBSTRING(Longitude, 4))
-                        END
-                    ELSE Longitude
-                END
-            ELSE NULL
-        END AS Float) AS Longitude
-    FROM Unioned
+        ,Students
+        ,Teachers
+        ,StudentTeacherRatio
+        ,FreeLunch
+        ,ReducedLunch
+        ,Latitude
+        ,Longitude
+    FROM Named
 ")
 
 createOrReplaceTempView(schools_2007_and_prior,"schools_2007_and_prior")
