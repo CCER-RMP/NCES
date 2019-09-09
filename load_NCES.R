@@ -354,9 +354,9 @@ schools_2007_and_prior <- sql("
             ,Magnet
             ,TitleISchool
             ,TitleISchoolWide
-            ,CAST(Students AS FLOAT) AS Students
-            ,CAST(Teachers AS FLOAT) AS Teachers
-            ,CAST(StudentTeacherRatio AS FLOAT) AS StudentTeacherRatio
+            ,CASE WHEN CAST(Students AS FLOAT) >= 0 THEN Students ELSE NULL END AS Students
+            ,CASE WHEN CAST(Teachers AS FLOAT) >= 0 THEN Teachers ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(StudentTeacherRatio AS FLOAT) >= 0 THEN StudentTeacherRatio ELSE NULL END AS StudentTeacherRatio
             ,CASE WHEN CAST(FreeLunch AS FLOAT) >= 0 THEN FreeLunch ELSE NULL END AS FreeLunch
             ,CASE WHEN CAST(ReducedLunch AS FLOAT) >= 0 THEN ReducedLunch ELSE NULL END AS ReducedLunch      
             ,CAST(CASE
@@ -499,7 +499,7 @@ schools_2008_2014 <- sql("
                 ELSE NULL
             END AS TitleISchoolWide
             ,CASE WHEN CAST(MEMBER AS INT) >= 0 THEN MEMBER ELSE NULL END AS Students
-            ,CASE WHEN CAST(FTE AS INT) >= 0 THEN FTE ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(FTE AS FLOAT) >= 0 THEN FTE ELSE NULL END AS Teachers
             ,CASE WHEN CAST(FRELCH AS INT) >= 0 THEN FRELCH ELSE NULL END AS FreeLunch
             ,CASE WHEN CAST(REDLCH AS INT) >= 0 THEN REDLCH ELSE NULL END AS ReducedLunch
             -- additional fields not in School Locator format
@@ -548,7 +548,7 @@ schools_2008_2014 <- sql("
                 ELSE NULL
             END AS TitleISchoolWide
             ,CASE WHEN CAST(MEMBER AS INT) >= 0 THEN MEMBER ELSE NULL END AS Students
-            ,CASE WHEN CAST(FTE AS INT) >= 0 THEN FTE ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(FTE AS FLOAT) >= 0 THEN FTE ELSE NULL END AS Teachers
             ,CASE WHEN CAST(FRELCH AS INT) >= 0 THEN FRELCH ELSE NULL END AS FreeLunch
             ,CASE WHEN CAST(REDLCH AS INT) >= 0 THEN REDLCH ELSE NULL END AS ReducedLunch
             -- additional fields not in School Locator format
@@ -597,7 +597,7 @@ schools_2008_2014 <- sql("
                 ELSE NULL
             END AS TitleISchoolWide
             ,CASE WHEN CAST(MEMBER AS INT) >= 0 THEN MEMBER ELSE NULL END AS Students
-            ,CASE WHEN CAST(FTE AS INT) >= 0 THEN FTE ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(FTE AS FLOAT) >= 0 THEN FTE ELSE NULL END AS Teachers
             ,CASE WHEN CAST(FRELCH AS INT) >= 0 THEN FRELCH ELSE NULL END AS FreeLunch
             ,CASE WHEN CAST(REDLCH AS INT) >= 0 THEN REDLCH ELSE NULL END AS ReducedLunch
             -- additional fields not in School Locator format
@@ -646,7 +646,7 @@ schools_2008_2014 <- sql("
                 ELSE NULL
             END AS TitleISchoolWide
             ,CASE WHEN CAST(MEMBER AS INT) >= 0 THEN MEMBER ELSE NULL END AS Students
-            ,CASE WHEN CAST(FTE AS INT) >= 0 THEN FTE ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(FTE AS FLOAT) >= 0 THEN FTE ELSE NULL END AS Teachers
             ,CASE WHEN CAST(FRELCH AS INT) >= 0 THEN FRELCH ELSE NULL END AS FreeLunch
             ,CASE WHEN CAST(REDLCH AS INT) >= 0 THEN REDLCH ELSE NULL END AS ReducedLunch
             -- additional fields not in School Locator format
@@ -695,7 +695,7 @@ schools_2008_2014 <- sql("
                 ELSE NULL
             END AS TitleISchoolWide
             ,CASE WHEN CAST(MEMBER09 AS INT) >= 0 THEN MEMBER09 ELSE NULL END AS Students
-            ,CASE WHEN CAST(FTE09 AS INT) >= 0 THEN FTE09 ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(FTE09 AS FLOAT) >= 0 THEN FTE09 ELSE NULL END AS Teachers
             ,CASE WHEN CAST(FRELCH09 AS INT) >= 0 THEN FRELCH09 ELSE NULL END AS FreeLunch
             ,CASE WHEN CAST(REDLCH09 AS INT) >= 0 THEN REDLCH09 ELSE NULL END AS ReducedLunch
             -- additional fields not in School Locator format
@@ -744,7 +744,7 @@ schools_2008_2014 <- sql("
                 ELSE NULL
             END AS TitleISchoolWide
             ,CASE WHEN CAST(MEMBER08 AS INT) >= 0 THEN MEMBER08 ELSE NULL END AS Students
-            ,CASE WHEN CAST(FTE08 AS INT) >= 0 THEN FTE08 ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(FTE08 AS FLOAT) >= 0 THEN FTE08 ELSE NULL END AS Teachers
             ,CASE WHEN CAST(FRELCH08 AS INT) >= 0 THEN FRELCH08 ELSE NULL END AS FreeLunch
             ,CASE WHEN CAST(REDLCH08 AS INT) >= 0 THEN REDLCH08 ELSE NULL END AS ReducedLunch
             -- additional fields not in School Locator format
@@ -793,7 +793,7 @@ schools_2008_2014 <- sql("
                 ELSE NULL
             END AS TitleISchoolWide
             ,CASE WHEN CAST(MEMBER07 AS INT) >= 0 THEN MEMBER07 ELSE NULL END AS Students
-            ,CASE WHEN CAST(FTE07 AS INT) >= 0 THEN FTE07 ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(FTE07 AS FLOAT) >= 0 THEN FTE07 ELSE NULL END AS Teachers
             ,CASE WHEN CAST(FRELCH07 AS INT) >= 0 THEN FRELCH07 ELSE NULL END AS FreeLunch
             ,CASE WHEN CAST(REDLCH07 AS INT) >= 0 THEN REDLCH07 ELSE NULL END AS ReducedLunch
             -- additional fields not in School Locator format
@@ -1194,10 +1194,12 @@ schools_2015_onwards <- sql("
             ,d.LZIP4 AS ZIP4
             ,d.PHONE AS Phone
             ,g.LOCALE AS LocaleCode
-            ,d.CHARTER_TEXT AS Charter
             ,CASE
-            	WHEN c.MAGNET_TEXT = 'Yes' THEN 'Yes'
-                WHEN c.MAGNET_TEXT = 'No' THEN 'No'
+                WHEN d.CHARTER_TEXT IN ('Yes', 'No') THEN d.CHARTER_TEXT
+                ELSE NULL
+            END AS Charter
+            ,CASE
+                WHEN c.MAGNET_TEXT IN ('Yes', 'No') THEN c.MAGNET_TEXT
             	ELSE NULL
             END AS Magnet
             ,CASE
@@ -1230,9 +1232,9 @@ schools_2015_onwards <- sql("
                     END
             END AS TitleISchoolWide
             ,CASE WHEN CAST(m.STUDENT_COUNT as INT) >= 0 THEN m.STUDENT_COUNT ELSE NULL END AS Students
-            ,CASE WHEN CAST(s.TEACHERS as INT) >= 0 THEN s.TEACHERS ELSE NULL END AS Teachers
-            ,free.STUDENT_COUNT AS FreeLunch
-            ,reduced.STUDENT_COUNT AS ReducedLunch
+            ,CASE WHEN CAST(s.TEACHERS as FLOAT) >= 0 THEN s.TEACHERS ELSE NULL END AS Teachers
+            ,CASE WHEN CAST(free.STUDENT_COUNT AS INT) >= 0 THEN free.STUDENT_COUNT ELSE NULL END AS FreeLunch
+            ,CASE WHEN CAST(reduced.STUDENT_COUNT AS INT) >= 0 THEN reduced.STUDENT_COUNT ELSE NULL END AS ReducedLunch
             -- additional fields not in School Locator format
             ,g.LAT As Latitude
             ,g.LON as Longitude
@@ -1343,11 +1345,12 @@ final <- sql("
         ,Magnet
         ,TitleISchool
         ,TitleISchoolWide
-        ,Students
-        ,Teachers
-        ,StudentTeacherRatio
-        ,FreeLunch
-        ,ReducedLunch
+        -- cast to remove leading 0's in early years
+        ,CAST(Students AS INT) as Students
+        ,CAST(Teachers as FLOAT) as Teachers
+        ,CAST(StudentTeacherRatio as float) as StudentTeacherRatio
+        ,CAST(FreeLunch AS INT) As FreeLunch
+        ,CAST(ReducedLunch AS INT) AS ReducedLunch
         ,CASE WHEN CAST(Latitude AS Float) <> 0.0 THEN Latitude ELSE NULL END as Latitude
         ,CASE WHEN CAST(Longitude AS Float) <> 0.0 THEN Longitude ELSE NULL END as Longitude
     FROM T
