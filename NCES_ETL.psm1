@@ -22,6 +22,7 @@ Function Get-NCESClusterURL {
 }
 
 Function Invoke-NCESETL {
+    # run in local mode unless -Cluster switch is specified
     Param(
         [Switch] $Cluster = $false
     )
@@ -43,7 +44,8 @@ Function Invoke-NCESETL {
     } else {
         $args = $args + @("--master", "local[*]")
         # in local mode, setting spark.executor.memory doesn't work, it's driver memory
-        # that controls executor's storage memory
+        # that controls executor's storage memory. we need this to avoid outofmemory errors
+        # when calling cache()
         $args = $args + @("--driver-memory", "3g")
     }
 
