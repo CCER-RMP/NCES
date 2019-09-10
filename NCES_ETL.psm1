@@ -36,12 +36,18 @@ Function Invoke-NCESETL {
 
     $start = $(Get-Date)
 
-    $master = "local[*]"
+    $args = @()
+
     if($Cluster) {
-        $master = Get-NCESClusterURL
+        $args = $args + @("--master", Get-NCESClusterURL)
+    } else {
+        $args = $args + @("--master", "local[*]")
+        # in local mode, setting spark.executor.memory doesn't work, it's driver memory
+        # that controls executor's storage memory
+        $args = $args + @("--driver-memory", "3g")
     }
 
-    . "$Env:SPARK_HOME\bin\spark-submit.cmd" --master $master load_NCES.R
+    . "$Env:SPARK_HOME\bin\spark-submit.cmd" $args load_NCES.R
 
     $end = $(Get-Date)
     $elapsedTime = $end - $start
@@ -103,8 +109,8 @@ Function Start-NCESCluster {
     )
 
     if($Workers -Eq -1) {
-        Get-WmiObject –class Win32_processor | ft systemname,Name,DeviceID,NumberOfCores,NumberOfLogicalProcessors, Addresswidth
-        $Workers = $(Get-WmiObject –class Win32_processor).NumberOfLogicalProcessors
+        Get-WmiObject -class Win32_processor | ft systemname,Name,DeviceID,NumberOfCores,NumberOfLogicalProcessors, Addresswidth
+        $Workers = $(Get-WmiObject -class Win32_processor).NumberOfLogicalProcessors
     }
 
     Start-NCESMaster
