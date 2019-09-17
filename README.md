@@ -2,7 +2,7 @@
 # NCES ETL
 
 Transforms the [NCES Common Core of Data](https://nces.ed.gov/ccd/) set of
-archival files into the more convenient format of the
+archival files into the convenient output format of the
 [School Locator](https://nces.ed.gov/ccd/schoolsearch/) tool, with some
 helpful tweaks/additions (namely, latitude and longitude fields)
 
@@ -52,7 +52,7 @@ Invoke-NCESETL
 # Notes
 
 The output file very closely resembles the output produced by the [NCES School Locator](https://nces.ed.gov/ccd/schoolsearch/) tool.
-As such, as it has the following fields:
+As such, it has the following fields:
 
 ```
 AcademicYear
