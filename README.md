@@ -2,11 +2,10 @@
 # NCES ETL
 
 Transforms the [NCES Common Core of Data](https://nces.ed.gov/ccd/) set of
-archival files into the convenient output format of the
-[School Locator](https://nces.ed.gov/ccd/schoolsearch/) tool, with some
-helpful tweaks/additions (namely, latitude and longitude fields)
-
-:warning: This is a WIP! :warning:
+archival files (2001 - present) into the convenient output format of the
+[School Locator](https://nces.ed.gov/ccd/schoolsearch/) tool (which only
+provides data from the latest year). Output includes some helpful
+tweaks/additions (namely, latitude and longitude fields).
 
 # Requirements
 
@@ -14,6 +13,8 @@ helpful tweaks/additions (namely, latitude and longitude fields)
 - R 3.4.4
 - Java 8
 - Apache Spark (instructions below)
+
+Should work on Linux if you puzzle through what the PowerShell code does and figure out the equivalent things to run on your system.
 
 # Installing Spark
 
