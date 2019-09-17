@@ -51,6 +51,41 @@ Invoke-NCESETL
 
 # Notes
 
+The output file very closely resembles the output produced by the [NCES School Locator](https://nces.ed.gov/ccd/schoolsearch/) tool.
+As such, as it has the following fields:
+
+```
+AcademicYear
+NCESSchoolID
+StateSchoolID
+NCESDistrictID
+StateDistrictID
+LowGrade
+HighGrade
+SchoolName
+District
+CountyName
+StreetAddress
+City
+State
+ZIP
+ZIP4
+Phone
+LocaleCode
+Locale
+Charter
+Magnet
+TitleISchool
+TitleISchoolWide
+Students
+Teachers
+StudentTeacherRatio
+FreeLunch
+ReducedLunch
+Latitude
+Longitude
+```
+
 AcademicYear values below are based on the "end year": e.g. 2016 means 2015-2016.
 
 Earliest year loaded is 2001. Prior to that, there are no geolocation fields,
