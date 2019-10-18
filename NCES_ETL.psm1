@@ -40,7 +40,7 @@ Function Invoke-NCESETL {
     $args = @()
 
     if($Cluster) {
-        $args = $args + @("--master", Get-NCESClusterURL)
+        $args = $args + @("--master", $(Get-NCESClusterURL))
     } else {
         $args = $args + @("--master", "local[*]")
         # in local mode, setting spark.executor.memory doesn't work, it's driver memory
