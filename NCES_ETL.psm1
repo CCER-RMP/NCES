@@ -32,8 +32,8 @@ Function Invoke-NCESETL {
     if($Env:PATH.IndexOf($path) -Eq -1) {
         $Env:PATH = "$Env:PATH;$rbinpath"
     }
-    $Env:HADOOP_HOME = "$Env:HOME\spark-2.4.3-bin-hadoop2.7"
-    $Env:SPARK_HOME = "$Env:HOME\spark-2.4.3-bin-hadoop2.7"
+    $Env:HADOOP_HOME = "$HOME\spark-2.4.3-bin-hadoop2.7"
+    $Env:SPARK_HOME = "$HOME\spark-2.4.3-bin-hadoop2.7"
 
     $start = $(Get-Date)
 
@@ -86,8 +86,8 @@ Function Start-NCESMaster {
     if($Env:PATH.IndexOf($path) -Eq -1) {
         $Env:PATH = "$Env:PATH;$rbinpath"
     }
-    $Env:HADOOP_HOME = "$Env:HOME\spark-2.4.3-bin-hadoop2.7"
-    $Env:SPARK_HOME = "$Env:HOME\spark-2.4.3-bin-hadoop2.7"
+    $Env:HADOOP_HOME = "$HOME\spark-2.4.3-bin-hadoop2.7"
+    $Env:SPARK_HOME = "$HOME\spark-2.4.3-bin-hadoop2.7"
 
    . "$Env:SPARK_HOME\bin\spark-class" org.apache.spark.deploy.master.Master
 }
@@ -99,8 +99,8 @@ Function Start-NCESWorker {
     if($Env:PATH.IndexOf($path) -Eq -1) {
         $Env:PATH = "$Env:PATH;$rbinpath"
     }
-    $Env:HADOOP_HOME = "$Env:HOME\spark-2.4.3-bin-hadoop2.7"
-    $Env:SPARK_HOME = "$Env:HOME\spark-2.4.3-bin-hadoop2.7"
+    $Env:HADOOP_HOME = "$HOME\spark-2.4.3-bin-hadoop2.7"
+    $Env:SPARK_HOME = "$HOME\spark-2.4.3-bin-hadoop2.7"
 
    . "$Env:SPARK_HOME\bin\spark-class" org.apache.spark.deploy.worker.Worker $(Get-NCESClusterURL) --cores 1 --memory 1G
 }
