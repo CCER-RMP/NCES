@@ -1190,6 +1190,13 @@ reduced_lunch <- sql("
         SCHOOL_YEAR
         ,NCESSCH
         ,STUDENT_COUNT
+    FROM lunch2019
+    WHERE TOTAL_INDICATOR = 'Category Set A' AND LUNCH_PROGRAM = 'Reduced-price lunch qualified'
+    UNION ALL
+    SELECT
+        SCHOOL_YEAR
+        ,NCESSCH
+        ,STUDENT_COUNT
     FROM lunch2018
     WHERE TOTAL_INDICATOR = 'Category Set A' AND LUNCH_PROGRAM = 'Reduced-price lunch qualified'
     UNION ALL
@@ -1529,5 +1536,42 @@ writeSparkTSV(final, "output/NCESSchools")
 wa <- repartition(sql("SELECT * FROM final WHERE State = 'WA'"), 1)
 
 writeSparkTSV(wa, "output/NCESSchoolsWA")
+
+wa_inventory <- repartition(sql("
+    WITH t AS (
+        SELECT
+            AcademicYear, 
+            case when TitleISchool = 'Yes' THEN 1 ELSE 0 END AS TitleISchool,
+            case when TitleISchoolWide = 'Yes' THEN 1 ELSE 0 END AS TitleISchoolWide,
+            case when Magnet = 'Yes' THEN 1 ELSE 0 END AS Magnet,
+            case when Charter = 'Yes' THEN 1 ELSE 0 END AS Charter,
+            case when FreeLunch is not null then 1 else 0 end as HasFreeLunch,
+            case when ReducedLunch is not null then 1 else 0 end as HasReducedLunch,
+            case when Latitude is not null then 1 else 0 end as HasLatLng
+        FROM final WHERE State = 'WA'
+    )
+    select 
+        AcademicYear
+        ,count(*) as Total
+        ,sum(TitleISchool) as TitleISchool
+        ,cast(sum(TitleISchool) as FLOAT) / count(*) as TitleISchoolPct
+        ,sum(TitleISchoolWide) as TitleISchoolWide
+        ,cast(sum(TitleISchoolWide) as FLOAT) / count(*) as TitleISchoolWidePct
+        ,sum(Magnet) as Magnet
+        ,cast(sum(Magnet) as FLOAT) / count(*) as MagnetPct
+        ,sum(Charter) as Charter
+        ,cast(sum(Charter) as FLOAT) / count(*) as CharterPct
+        ,sum(HasFreeLunch) as HasFreeLunch
+        ,cast(sum(HasFreeLunch) as FLOAT) / count(*) as HasFreeLunchPct
+        ,sum(HasReducedLunch) as HasReducedLunch
+        ,cast(sum(HasReducedLunch) as FLOAT) / count(*) as HasReducedLunchPct
+        ,sum(HasLatLng) as HasLatLng
+        ,cast(sum(HasLatLng) as FLOAT) / count(*) as HasLatLngPct
+    from t
+    group by AcademicYear
+    order by AcademicYear
+"), 1)
+
+writeSparkTSV(wa_inventory, "output/NCESSchoolsWAInventory")
 
 sparkR.session.stop()
