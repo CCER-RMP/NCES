@@ -844,7 +844,7 @@ createOrReplaceTempView(
 #### directory file
 
 createOrReplaceTempView(
-    read.df(paste(input_dir, "ccd_sch_029_1819_w_0a_04082019.csv", sep="/"), source="csv", "header"= "true")
+    read.df(paste(input_dir, "ccd_sch_029_1819_w_1a_091019.csv", sep="/"), source="csv", "header"= "true")
     ,"directory2019")
 createOrReplaceTempView(
     read.df(paste(input_dir, "ccd_sch_029_1718_w_1a_083118.csv", sep="/"), source="csv", "header"= "true")
@@ -963,6 +963,9 @@ createOrReplaceTempView(directory, "directory")
 #### characteristics file
 
 createOrReplaceTempView(
+    read.df(paste(input_dir, "ccd_sch_129_1819_w_1a_091019.csv", sep="/"), source="csv", "header"= "true")
+    ,"characteristics2019")
+createOrReplaceTempView(
     read.df(paste(input_dir, "ccd_sch_129_1718_w_1a_083118.csv", sep="/"), source="csv", "header"= "true")
     ,"characteristics2018")
 createOrReplaceTempView(
@@ -976,6 +979,13 @@ createOrReplaceTempView(
     ,"characteristics2015")
 
 characteristics <- sql("
+    SELECT
+        SCHOOL_YEAR
+        ,NCESSCH
+        ,MAGNET_TEXT
+        ,TITLEI_STATUS 
+    FROM characteristics2019
+    UNION ALL
     SELECT
         SCHOOL_YEAR
         ,NCESSCH
@@ -1012,6 +1022,9 @@ createOrReplaceTempView(characteristics, "characteristics")
 #### staff file
 
 createOrReplaceTempView(
+    read.df(paste(input_dir, "ccd_sch_059_1819_l_1a_091019.csv", sep="/"), source="csv", "header"= "true")
+    ,"staff2019")
+createOrReplaceTempView(
     read.df(paste(input_dir, "ccd_sch_059_1718_l_1a_083118.csv", sep="/"), source="csv", "header"= "true")
     ,"staff2018")
 createOrReplaceTempView(
@@ -1025,6 +1038,12 @@ createOrReplaceTempView(
     ,"staff2015")
 
 staff <- sql("
+    SELECT
+        SCHOOL_YEAR
+        ,NCESSCH
+        ,TEACHERS
+    FROM staff2019
+    UNION ALL
     SELECT
         SCHOOL_YEAR
         ,NCESSCH
@@ -1057,6 +1076,9 @@ createOrReplaceTempView(staff, "staff")
 #### membership file
 
 createOrReplaceTempView(
+    read.df(paste(input_dir, "ccd_SCH_052_1819_l_1a_091019.csv", sep="/"), source="csv", "header"= "true")
+    ,"membership2019")
+createOrReplaceTempView(
     read.df(paste(input_dir, "ccd_SCH_052_1718_l_1a_083118.csv", sep="/"), source="csv", "header"= "true")
     ,"membership2018")
 createOrReplaceTempView(
@@ -1070,6 +1092,13 @@ createOrReplaceTempView(
     ,"membership2015")
 
 membership <- sql("
+    SELECT
+        SCHOOL_YEAR
+        ,NCESSCH
+        ,STUDENT_COUNT
+    FROM membership2019
+    WHERE TOTAL_INDICATOR = 'Derived - Education Unit Total minus Adult Education Count'
+    UNION ALL
     SELECT
         SCHOOL_YEAR
         ,NCESSCH
@@ -1104,6 +1133,9 @@ createOrReplaceTempView(membership, "membership")
 #### lunch file
 
 createOrReplaceTempView(
+    read.df(paste(input_dir, "ccd_sch_033_1819_l_1a_091019.csv", sep="/"), source="csv", "header"= "true")
+    ,"lunch2019")
+createOrReplaceTempView(
     read.df(paste(input_dir, "ccd_sch_033_1718_l_1a_083118.csv", sep="/"), source="csv", "header"= "true")
     ,"lunch2018")
 createOrReplaceTempView(
@@ -1117,6 +1149,13 @@ createOrReplaceTempView(
     ,"lunch2015")
 
 free_lunch <- sql("
+    SELECT
+        SCHOOL_YEAR
+        ,NCESSCH
+        ,STUDENT_COUNT
+    FROM lunch2019
+    WHERE TOTAL_INDICATOR = 'Category Set A' AND LUNCH_PROGRAM = 'Free lunch qualified'
+    UNION ALL
     SELECT
         SCHOOL_YEAR
         ,NCESSCH
@@ -1178,6 +1217,12 @@ createOrReplaceTempView(reduced_lunch, "reduced_lunch")
 
 #### geocode
 
+geocodeRaw2019 <- read.df(paste(input_dir, "EDGE_GEOCODE_PUBLICSCH_1819.TXT", sep="/"), source="csv", sep="|")
+colnames(geocodeRaw2019) <- c(
+  "NCESSCH", "LEAID", "NAME", "OPSTFIPS", "STREET", "CITY", "STATE", "ZIP", "STFIP", "CNTY", 
+  "NMCNTY", "LOCALE", "LAT", "LON", "CBSA", "NMCBSA", "CBSATYPE", "CSA", "NMCSA", "NECTA",
+  "NMNECTA", "CD", "SLDL", "SLDU", "SCHOOLYEAR" )
+
 geocodeRaw2018 <- read.df(paste(input_dir, "EDGE_GEOCODE_PUBLICSCH_1718/EDGE_GEOCODE_PUBLICSCH_1718.TXT", sep="/"), source="csv", sep="|")
 colnames(geocodeRaw2018) <- c(
   "NCESSCH", "NAME", "OPSTFIPS", "STREET", "CITY", "STATE", "ZIP", "STFIP", "CNTY",
@@ -1190,6 +1235,9 @@ colnames(geocodeRaw2017) <- c(
   "NMCNTY", "LOCALE", "LAT", "LON", "CBSA", "NMCBSA", "CBSATYPE", "CSA", "NMCSA", "NECTA",
   "NMNECTA", "CD", "SLDL", "SLDU", "SCHOOLYEAR" )
 
+createOrReplaceTempView(
+    geocodeRaw2019
+    ,"geocodeRaw2019")
 createOrReplaceTempView(
     geocodeRaw2018
     ,"geocodeRaw2018")
@@ -1207,6 +1255,15 @@ createOrReplaceTempView(
     ,"geocodeRaw2015")
 
 geocode <- sql("
+    SELECT
+        SCHOOLYEAR
+        ,NCESSCH
+        ,NMCNTY
+        ,LOCALE
+        ,LAT
+        ,LON
+    FROM geocodeRaw2019
+    UNION ALL
     SELECT
         SCHOOLYEAR
         ,NCESSCH
@@ -1250,8 +1307,10 @@ schools_2015_onwards <- sql("
     WITH directoryModified as (
         SELECT
             *
-            -- use 2018 when joining for the 2019 data, since other tables aren't available yet
-            ,CASE WHEN SCHOOL_YEAR = '2018-2019' THEN '2017-2018' ELSE SCHOOL_YEAR END AS SCHOOL_YEAR_FOR_JOIN
+            -- example code for joining on previous year when only preliminary data is available.
+            -- we should probably never do this: it's misleading. any 'patching' of this sort should happen further downstream.
+            --,CASE WHEN SCHOOL_YEAR = '2018-2019' THEN '2017-2018' ELSE SCHOOL_YEAR END AS SCHOOL_YEAR_FOR_JOIN
+            ,SCHOOL_YEAR AS SCHOOL_YEAR_FOR_JOIN
         FROM directory 
     )
     ,T AS (

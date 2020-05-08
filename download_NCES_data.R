@@ -28,8 +28,16 @@ input_dir <- here("input")
 urls <- c(
 	# from 2015 to 2018, there are 5 files in common core, and a separate geocode file
 
-	# 2019 Preliminary
-	"https://nces.ed.gov/ccd/Data/zip/ccd_sch_029_1819_w_0a_04082019_csv.zip"
+	# these are school-level files
+
+	# 2019
+	"https://nces.ed.gov/ccd/data/zip/ccd_sch_029_1819_w_1a_091019.zip"
+	,"https://nces.ed.gov/ccd/data/zip/ccd_sch_052_1819_l_1a_091019.zip"
+	,"https://nces.ed.gov/ccd/data/zip/ccd_sch_059_1819_l_1a_091019.zip"
+	,"https://nces.ed.gov/ccd/data/zip/ccd_sch_129_1819_w_1a_091019.zip"
+	,"https://nces.ed.gov/ccd/data/zip/ccd_sch_033_1819_l_1a_091019.zip"
+	# geocode
+	,"https://nces.ed.gov/programs/edge/data/EDGE_GEOCODE_PUBLICSCH_1819.zip"
 
 	# 2018
 	,"https://nces.ed.gov/ccd/Data/zip/ccd_sch_029_1718_w_1a_083118.zip"
@@ -142,6 +150,8 @@ for(url in urls) {
 # this is a zip within a zip
 # built-in zip in R chokes on this file, so we point to unzip that comes with git-bash
 unzip(paste(input_dir, "ccd_SCH_052_1718_l_1a_083118 CSV.zip", sep="/"), exdir=input_dir, overwrite=FALSE, unzip = 'C:/Program Files/Git/usr/bin/unzip.exe')
+
+unzip(paste(input_dir, "ccd_SCH_052_1819_l_1a_091019_CSV.zip", sep="/"), exdir=input_dir, overwrite=FALSE, unzip = 'C:/Program Files/Git/usr/bin/unzip.exe')
 
 geocode2016 <- paste(input_dir, "EDGE_GEOCODE_PUBLICSCH_1516/EDGE_GEOCODE_PUBLICSCH_1516.txt", sep="/")
 if(!file.exists(geocode2016)) {
