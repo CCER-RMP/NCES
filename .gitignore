@@ -10,3 +10,13 @@ output/
 
 # created by Spark
 metastore_db/
+
+*.sublime-*
+
+env/
+
+target/
+dbt_modules/
+logs/
+
+*.db

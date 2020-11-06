@@ -1,0 +1,81 @@
+
+version: 2
+
+# models:
+#     - name: my_first_dbt_model
+#       description: "A starter dbt model"
+#       columns:
+#           - name: id
+#             description: "The primary key for this table"
+#             tests:
+#                 - unique
+#                 - not_null
+
+#     - name: my_second_dbt_model
+#       description: "A starter dbt model"
+#       columns:
+#           - name: id
+#             description: "The primary key for this table"
+#             tests:
+#                 - unique
+#                 - not_null
+
+sources:
+  - name: source_data
+    description: raw source source_data
+    schema: main
+    tables:
+      - name: schools2007
+      - name: schools2006
+      - name: schools2005
+      - name: schools2004
+      - name: schools2003
+      - name: schools2002
+      - name: schools2001
+      - name: schools2000
+
+      - name: schools2014
+      - name: schools2013
+      - name: schools2012
+      - name: schools2011
+      - name: schools2010
+      - name: schools2009
+      - name: schools2008
+
+      - name: directory2019
+      - name: directory2018
+      - name: directory2017
+      - name: directory2016
+      - name: directory2015
+
+      - name: characteristics2019
+      - name: characteristics2018
+      - name: characteristics2017
+      - name: characteristics2016
+      - name: characteristics2015
+
+      - name: staff2019
+      - name: staff2018
+      - name: staff2017
+      - name: staff2016
+      - name: staff2015
+
+      - name: membership2019
+      - name: membership2018
+      - name: membership2017
+      - name: membership2016
+      - name: membership2015
+
+      - name: lunch2019
+      - name: lunch2018
+      - name: lunch2017
+      - name: lunch2016
+      - name: lunch2015
+
+      - name: geocodeRaw2019
+      - name: geocodeRaw2018
+      - name: geocodeRaw2017
+      - name: geocodeRaw2016
+      - name: geocodeRaw2015
+
+      - name: locale_codes
