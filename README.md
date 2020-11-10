@@ -9,10 +9,8 @@ tweaks/additions (namely, latitude and longitude fields).
 
 ## Requirements
 
-- Windows 10
+- Windows 10 (should also work on Linux but this been tested)
 - Python >= 3.8.3
-
-Should work on Linux if you puzzle through what the PowerShell code does and figure out the equivalent things to run on your system.
 
 ## Setup
 
@@ -67,7 +65,7 @@ dbt run
 python export.py
 ```
 
-Downloading and loading take the most time. Creating the models is pretty fast.
+Downloading and loading take the most time (several minutes). Creating the models is pretty fast.
 
 ## Notes
 
