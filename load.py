@@ -57,7 +57,7 @@ def load_into_sqlite(conn, paths, table, columns=None, create_table=False, delim
             num_rows_loaded = load_from_iterator(conn, reader, table, len(headers))
             count = count + num_rows_loaded
 
-        print(f"{count} rows loaded from {path}")
+        print(f"{count} rows loaded from {path} into {table}")
 
 
 def load_from_iterator(conn, iter, table, row_size):
@@ -90,243 +90,277 @@ def load_from_iterator(conn, iter, table, row_size):
 
 input_dir = "./input"
 
-conn = sqlite3.connect('database/NCES.db')
+def load_all():
 
-#### 2007 and prior
+    conn = sqlite3.connect('database/NCES.db')
 
-# these files have fixed-length fields, and the starting positions/lengths of fields vary a lot
-# across years
+    #### 2007 and prior
 
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "Sc061cai.dat"),
-    os.path.join(input_dir, "Sc061ckn.dat"),
-    os.path.join(input_dir, "Sc061cow.dat"),
-], "schools2007", columns=['LINE'], create_table=True, delimiter="\n")
+    # these files have fixed-length fields, and the starting positions/lengths of fields vary a lot
+    # across years
 
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "Sc051aai.dat"),
-    os.path.join(input_dir, "Sc051akn.dat"),
-    os.path.join(input_dir, "Sc051aow.dat"),
-], "schools2006", columns=['LINE'], create_table=True, delimiter="\n")
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "sc041bai.dat"),
-    os.path.join(input_dir, "sc041bkn.dat"),
-    os.path.join(input_dir, "sc041bow.dat"),
-], "schools2005", columns=['LINE'], create_table=True, delimiter="\n")
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "sc031aai.txt"),
-    os.path.join(input_dir, "sc031akn.txt"),
-    os.path.join(input_dir, "sc031aow.txt"),
-], "schools2004", columns=['LINE'], create_table=True, delimiter="\n")
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "Sc021aai.txt"),
-    os.path.join(input_dir, "Sc021akn.txt"),
-    os.path.join(input_dir, "Sc021aow.txt"),
-], "schools2003", columns=['LINE'], create_table=True, delimiter="\n")
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "sc011aai.dat"),
-    os.path.join(input_dir, "sc011akn.dat"),
-    os.path.join(input_dir, "sc011aow.dat"),
-], "schools2002", columns=['LINE'], create_table=True, delimiter="\n")
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "sc001aai.dat"),
-    os.path.join(input_dir, "sc001akn.dat"),
-    os.path.join(input_dir, "sc001aow.dat"),
-], "schools2001", columns=['LINE'], create_table=True, delimiter="\n")
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "sc991bai.dat"),
-    os.path.join(input_dir, "sc991bkn.dat"),
-    os.path.join(input_dir, "sc991bow.dat"),
-], "schools2000", columns=['LINE'], create_table=True, delimiter="\n")
-
-#### 2008 - 2014
-
-# these years had single files for CCD
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "sc132a.txt"),
-], "schools2014", create_table=True, delimiter="\t")
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "sc122a.txt"),
-], "schools2013", create_table=True, delimiter="\t")
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "sc111a_supp.txt"),
-], "schools2012", create_table=True, delimiter="\t")
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "sc102a.txt"),
-], "schools2011", create_table=True, delimiter="\t")
-
-# in 2010 and prior, yr is encoded in the fieldname (e.g. SEASCH07)
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "sc092a.txt"),
-], "schools2010", create_table=True, delimiter="\t")
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "sc081b.txt"),
-], "schools2009", create_table=True, delimiter="\t")
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "sc071b.txt"),
-], "schools2008", create_table=True, delimiter="\t")
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "Sc061cai.dat"),
+        os.path.join(input_dir, "Sc061ckn.dat"),
+        os.path.join(input_dir, "Sc061cow.dat"),
+    ], "schools2007", columns=['LINE'], create_table=True, delimiter="\n")
 
 
-#### 2015 Onwards
-#### these years had 5 separate files plus geocode file
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "Sc051aai.dat"),
+        os.path.join(input_dir, "Sc051akn.dat"),
+        os.path.join(input_dir, "Sc051aow.dat"),
+    ], "schools2006", columns=['LINE'], create_table=True, delimiter="\n")
 
-#### directory file
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "sc041bai.dat"),
+        os.path.join(input_dir, "sc041bkn.dat"),
+        os.path.join(input_dir, "sc041bow.dat"),
+    ], "schools2005", columns=['LINE'], create_table=True, delimiter="\n")
 
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_029_1819_w_1a_091019.csv"),
-], "directory2019", create_table=True)
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "sc031aai.txt"),
+        os.path.join(input_dir, "sc031akn.txt"),
+        os.path.join(input_dir, "sc031aow.txt"),
+    ], "schools2004", columns=['LINE'], create_table=True, delimiter="\n")
 
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_029_1718_w_1a_083118.csv"),
-], "directory2018", create_table=True)
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "Sc021aai.txt"),
+        os.path.join(input_dir, "Sc021akn.txt"),
+        os.path.join(input_dir, "Sc021aow.txt"),
+    ], "schools2003", columns=['LINE'], create_table=True, delimiter="\n")
 
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_029_1617_w_1a_11212017.csv"),
-], "directory2017", create_table=True)
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "sc011aai.dat"),
+        os.path.join(input_dir, "sc011akn.dat"),
+        os.path.join(input_dir, "sc011aow.dat"),
+    ], "schools2002", columns=['LINE'], create_table=True, delimiter="\n")
 
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_029_1516_w_2a_011717.csv"),
-], "directory2016", create_table=True)
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "sc001aai.dat"),
+        os.path.join(input_dir, "sc001akn.dat"),
+        os.path.join(input_dir, "sc001aow.dat"),
+    ], "schools2001", columns=['LINE'], create_table=True, delimiter="\n")
 
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_029_1415_w_0216601a.txt"),
-], "directory2015", create_table=True, delimiter="\t")
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "sc991bai.dat"),
+        os.path.join(input_dir, "sc991bkn.dat"),
+        os.path.join(input_dir, "sc991bow.dat"),
+    ], "schools2000", columns=['LINE'], create_table=True, delimiter="\n")
 
-# #### characteristics file
+    #### 2008 - 2014
 
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_129_1819_w_1a_091019.csv"),
-], "characteristics2019", create_table=True)
+    # these years had single files for CCD
 
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_129_1718_w_1a_083118.csv"),
-], "characteristics2018", create_table=True)
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "sc132a.txt"),
+    ], "schools2014", create_table=True, delimiter="\t")
 
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_129_1617_w_1a_11212017.csv"),
-], "characteristics2017", create_table=True)
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "sc122a.txt"),
+    ], "schools2013", create_table=True, delimiter="\t")
 
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_129_1516_w_2a_011717.csv"),
-], "characteristics2016", create_table=True)
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "sc111a_supp.txt"),
+    ], "schools2012", create_table=True, delimiter="\t")
 
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_129_1415_w_0216161a.txt"),
-], "characteristics2015", create_table=True, delimiter="\t")
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "sc102a.txt"),
+    ], "schools2011", create_table=True, delimiter="\t")
 
-#### staff file
+    # in 2010 and prior, yr is encoded in the fieldname (e.g. SEASCH07)
 
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_059_1819_l_1a_091019.csv"),
-], "staff2019", create_table=True)
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "sc092a.txt"),
+    ], "schools2010", create_table=True, delimiter="\t")
 
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_059_1718_l_1a_083118.csv"),
-], "staff2018", create_table=True)
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "sc081b.txt"),
+    ], "schools2009", create_table=True, delimiter="\t")
 
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_059_1617_l_2a_11212017_csv.csv"),
-], "staff2017", create_table=True)
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_059_1516_w_2a_011717.csv"),
-], "staff2016", create_table=True)
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_059_1415_w_0216161a.txt"),
-], "staff2015", create_table=True, delimiter="\t")
-
-#### membership file
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_SCH_052_1819_l_1a_091019.csv"),
-], "membership2019", create_table=True)
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_SCH_052_1718_l_1a_083118.csv"),
-], "membership2018", create_table=True)
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_SCH_052_1617_l_2a_11212017.csv"),
-], "membership2017", create_table=True)
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_052_1516_w_2a_011717.csv"),
-], "membership2016", create_table=True)
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_052_1415_w_0216161a.txt"),
-], "membership2015", create_table=True, delimiter="\t")
-
-#### lunch file
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_033_1819_l_1a_091019.csv"),
-], "lunch2019", create_table=True)
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_033_1718_l_1a_083118.csv"),
-], "lunch2018", create_table=True)
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_033_1617_l_2a_11212017.csv"),
-], "lunch2017", create_table=True)
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_033_1516_w_2a_011717.csv"),
-], "lunch2016", create_table=True)
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "ccd_sch_033_1415_w_0216161a.txt"),
-], "lunch2015", create_table=True, delimiter="\t")
-
-# #### geocode
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "EDGE_GEOCODE_PUBLICSCH_1819.TXT"),
-], "geocodeRaw2019", create_table=True, delimiter="|",
-columns=[
-    "NCESSCH", "LEAID", "NAME", "OPSTFIPS", "STREET", "CITY", "STATE", "ZIP", "STFIP", "CNTY",
-    "NMCNTY", "LOCALE", "LAT", "LON", "CBSA", "NMCBSA", "CBSATYPE", "CSA", "NMCSA", "NECTA",
-    "NMNECTA", "CD", "SLDL", "SLDU", "SCHOOLYEAR" ])
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "EDGE_GEOCODE_PUBLICSCH_1718/EDGE_GEOCODE_PUBLICSCH_1718.TXT"),
-], "geocodeRaw2018", create_table=True, delimiter="|",
-columns=[
-    "NCESSCH", "NAME", "OPSTFIPS", "STREET", "CITY", "STATE", "ZIP", "STFIP", "CNTY",
-    "NMCNTY", "LOCALE", "LAT", "LON", "CBSA", "NMCBSA", "CBSATYPE", "CSA", "NMCSA", "NECTA",
-    "NMNECTA", "CD", "SLDL", "SLDU", "SCHOOLYEAR" ])
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "EDGE_GEOCODE_PUBLICSCH_1617/EDGE_GEOCODE_PUBLICSCH_1617.TXT"),
-], "geocodeRaw2017", create_table=True, delimiter="|",
-columns=[
-    "NCESSCH", "NAME", "OPSTFIPS", "STREET", "CITY", "STATE", "ZIP", "STFIP", "CNTY",
-    "NMCNTY", "LOCALE", "LAT", "LON", "CBSA", "NMCBSA", "CBSATYPE", "CSA", "NMCSA", "NECTA",
-    "NMNECTA", "CD", "SLDL", "SLDU", "SCHOOLYEAR" ])
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "EDGE_GEOCODE_PUBLICSCH_1516/EDGE_GEOCODE_PUBLICSCH_1516.txt"),
-], "geocodeRaw2016", create_table=True, delimiter="\t")
-
-load_into_sqlite(conn, [
-    os.path.join(input_dir, "EDGE_GEOIDS_201415_PUBLIC_SCHOOL.csv"),
-], "geocodeRaw2015", create_table=True)
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "sc071b.txt"),
+    ], "schools2008", create_table=True, delimiter="\t")
 
 
-conn.close()
+    #### 2015 Onwards
+    #### these years had 5 separate files plus geocode file
+
+    #### directory file
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_029_1920_w_1a_082120.csv"),
+    ], "directory2020", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_029_1819_w_1a_091019.csv"),
+    ], "directory2019", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_029_1718_w_1a_083118.csv"),
+    ], "directory2018", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_029_1617_w_1a_11212017.csv"),
+    ], "directory2017", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_029_1516_w_2a_011717.csv"),
+    ], "directory2016", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_029_1415_w_0216601a.txt"),
+    ], "directory2015", create_table=True, delimiter="\t")
+
+    # #### characteristics file
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_129_1920_w_1a_082120.csv"),
+    ], "characteristics2020", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_129_1819_w_1a_091019.csv"),
+    ], "characteristics2019", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_129_1718_w_1a_083118.csv"),
+    ], "characteristics2018", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_129_1617_w_1a_11212017.csv"),
+    ], "characteristics2017", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_129_1516_w_2a_011717.csv"),
+    ], "characteristics2016", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_129_1415_w_0216161a.txt"),
+    ], "characteristics2015", create_table=True, delimiter="\t")
+
+    #### staff file
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_059_1920_l_1a_082120.csv"),
+    ], "staff2020", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_059_1819_l_1a_091019.csv"),
+    ], "staff2019", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_059_1718_l_1a_083118.csv"),
+    ], "staff2018", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_059_1617_l_2a_11212017_csv.csv"),
+    ], "staff2017", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_059_1516_w_2a_011717.csv"),
+    ], "staff2016", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_059_1415_w_0216161a.txt"),
+    ], "staff2015", create_table=True, delimiter="\t")
+
+    #### membership file
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_SCH_052_1920_l_1a_082120.csv"),
+    ], "membership2020", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_SCH_052_1819_l_1a_091019.csv"),
+    ], "membership2019", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_SCH_052_1718_l_1a_083118.csv"),
+    ], "membership2018", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_SCH_052_1617_l_2a_11212017.csv"),
+    ], "membership2017", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_052_1516_w_2a_011717.csv"),
+    ], "membership2016", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_052_1415_w_0216161a.txt"),
+    ], "membership2015", create_table=True, delimiter="\t")
+
+    #### lunch file
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_033_1920_l_1a_082120.csv"),
+    ], "lunch2020", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_033_1819_l_1a_091019.csv"),
+    ], "lunch2019", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_033_1718_l_1a_083118.csv"),
+    ], "lunch2018", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_033_1617_l_2a_11212017.csv"),
+    ], "lunch2017", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_033_1516_w_2a_011717.csv"),
+    ], "lunch2016", create_table=True)
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "ccd_sch_033_1415_w_0216161a.txt"),
+    ], "lunch2015", create_table=True, delimiter="\t")
+
+    # #### geocode
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "EDGE_GEOCODE_PUBLICSCH_1920/EDGE_GEOCODE_PUBLICSCH_1920.TXT"),
+    ], "geocodeRaw2020", create_table=True, delimiter="|",
+    columns=[
+        "NCESSCH", "LEAID", "NAME", "OPSTFIPS", "STREET", "CITY", "STATE", "ZIP", "STFIP", "CNTY",
+        "NMCNTY", "LOCALE", "LAT", "LON", "CBSA", "NMCBSA", "CBSATYPE", "CSA", "NMCSA", "NECTA",
+        "NMNECTA", "CD", "SLDL", "SLDU", "SCHOOLYEAR" ])
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "EDGE_GEOCODE_PUBLICSCH_1819.TXT"),
+    ], "geocodeRaw2019", create_table=True, delimiter="|",
+    columns=[
+        "NCESSCH", "LEAID", "NAME", "OPSTFIPS", "STREET", "CITY", "STATE", "ZIP", "STFIP", "CNTY",
+        "NMCNTY", "LOCALE", "LAT", "LON", "CBSA", "NMCBSA", "CBSATYPE", "CSA", "NMCSA", "NECTA",
+        "NMNECTA", "CD", "SLDL", "SLDU", "SCHOOLYEAR" ])
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "EDGE_GEOCODE_PUBLICSCH_1718/EDGE_GEOCODE_PUBLICSCH_1718.TXT"),
+    ], "geocodeRaw2018", create_table=True, delimiter="|",
+    columns=[
+        "NCESSCH", "NAME", "OPSTFIPS", "STREET", "CITY", "STATE", "ZIP", "STFIP", "CNTY",
+        "NMCNTY", "LOCALE", "LAT", "LON", "CBSA", "NMCBSA", "CBSATYPE", "CSA", "NMCSA", "NECTA",
+        "NMNECTA", "CD", "SLDL", "SLDU", "SCHOOLYEAR" ])
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "EDGE_GEOCODE_PUBLICSCH_1617/EDGE_GEOCODE_PUBLICSCH_1617.TXT"),
+    ], "geocodeRaw2017", create_table=True, delimiter="|",
+    columns=[
+        "NCESSCH", "NAME", "OPSTFIPS", "STREET", "CITY", "STATE", "ZIP", "STFIP", "CNTY",
+        "NMCNTY", "LOCALE", "LAT", "LON", "CBSA", "NMCBSA", "CBSATYPE", "CSA", "NMCSA", "NECTA",
+        "NMNECTA", "CD", "SLDL", "SLDU", "SCHOOLYEAR" ])
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "EDGE_GEOCODE_PUBLICSCH_1516/EDGE_GEOCODE_PUBLICSCH_1516.txt"),
+    ], "geocodeRaw2016", create_table=True, delimiter="\t")
+
+    load_into_sqlite(conn, [
+        os.path.join(input_dir, "EDGE_GEOIDS_201415_PUBLIC_SCHOOL.csv"),
+    ], "geocodeRaw2015", create_table=True)
+
+
+    conn.close()
+
+
+if __name__ == "__main__":
+    load_all()

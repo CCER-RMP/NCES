@@ -116,6 +116,9 @@ load earlier data.
 Note that there are inaccuracies/missing values for various year/district/school
 combinations. In particular:
 - Numbers for FreeLunch in 2005 and 2007 are abnormally low compared to other years
+- In 2014, the 'FTE' field, which we use to calculate the number of teachers,
+has missing values (they are set to -1 and -2) for WA state schools. They seem fine
+for other states though.
 
 'Missing' and 'Not applicable' are converted to NULLs.
 
@@ -126,7 +129,7 @@ These counts shouldn't shouldn't significantly change from year to year.
 ```
 WITH t AS (
     SELECT
-        AcademicYear, 
+        AcademicYear,
         case when cast(Students as int) > 0 then 1 else 0 end as HasStudents,
         case when cast(Teachers as float) > 0 then 1 else 0 end as HasTeachers,
         case when TitleISchool = 'Yes' THEN 1 ELSE 0 END AS TitleISchool,
@@ -138,7 +141,7 @@ WITH t AS (
         case when Latitude is not null then 1 else 0 end as HasLatLng
     FROM final WHERE State = 'WA'
 )
-select 
+select
     AcademicYear
     ,count(*) as Total
 	,sum(HasStudents) AS HasStudents

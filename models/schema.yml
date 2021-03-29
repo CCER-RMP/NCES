@@ -42,36 +42,42 @@ sources:
       - name: schools2009
       - name: schools2008
 
+      - name: directory2020
       - name: directory2019
       - name: directory2018
       - name: directory2017
       - name: directory2016
       - name: directory2015
 
+      - name: characteristics2020
       - name: characteristics2019
       - name: characteristics2018
       - name: characteristics2017
       - name: characteristics2016
       - name: characteristics2015
 
+      - name: staff2020
       - name: staff2019
       - name: staff2018
       - name: staff2017
       - name: staff2016
       - name: staff2015
 
+      - name: membership2020
       - name: membership2019
       - name: membership2018
       - name: membership2017
       - name: membership2016
       - name: membership2015
 
+      - name: lunch2020
       - name: lunch2019
       - name: lunch2018
       - name: lunch2017
       - name: lunch2016
       - name: lunch2015
 
+      - name: geocodeRaw2020
       - name: geocodeRaw2019
       - name: geocodeRaw2018
       - name: geocodeRaw2017

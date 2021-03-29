@@ -8,6 +8,15 @@ SELECT
  ,LOCALE
  ,LAT
  ,LON
+FROM {{ source('source_data', 'geocodeRaw2020') }}
+UNION ALL
+SELECT
+ SCHOOLYEAR
+ ,NCESSCH
+ ,NMCNTY
+ ,LOCALE
+ ,LAT
+ ,LON
 FROM {{ source('source_data', 'geocodeRaw2019') }}
 UNION ALL
 SELECT

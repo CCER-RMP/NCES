@@ -15,7 +15,7 @@ field_names = [i[0] for i in c.description]
 results = c.fetchall()
 
 with codecs.open("output/NCESSchoolsWA.txt", 'w', 'utf8') as f:
-    writer = csv.writer(f, delimiter="\t")
+    writer = csv.writer(f, delimiter="\t", quoting=csv.QUOTE_NONE, quotechar='')
 
     writer.writerow(field_names)
     for row in results:

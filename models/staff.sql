@@ -5,6 +5,12 @@ SELECT
     SCHOOL_YEAR
     ,NCESSCH
     ,TEACHERS
+FROM {{ source('source_data', 'staff2020') }}
+UNION ALL
+SELECT
+    SCHOOL_YEAR
+    ,NCESSCH
+    ,TEACHERS
 FROM {{ source('source_data', 'staff2019') }}
 UNION ALL
 SELECT

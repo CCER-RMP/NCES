@@ -16,8 +16,30 @@ urls = [
 
     # these are school-level files
 
+    # to find these files via the website, go to this URL:
+    # https://nces.ed.gov/ccd/files.asp
+    # select 'Nonfiscal' and 'School' for the level.
+    # the geocode file is separate:
+    # https://nces.ed.gov/programs/edge/Geographic/SchoolLocations
+
+    # three-char codes in the filenames:
+    # 029 = directory file
+    # 052 = membership file
+    # 059 = staff file
+    # 129 = school characteristics file
+    # 033 = lunch program accessibility
+
+    # 2020
+    "https://nces.ed.gov/ccd/Data/zip/ccd_sch_029_1920_w_1a_082120.zip"
+    ,"https://nces.ed.gov/ccd/Data/zip/ccd_SCH_052_1920_l_1a_082120.zip"
+    ,"https://nces.ed.gov/ccd/Data/zip/ccd_sch_059_1920_l_1a_082120.zip"
+    ,"https://nces.ed.gov/ccd/Data/zip/ccd_sch_129_1920_w_1a_082120.zip"
+    ,"https://nces.ed.gov/ccd/Data/zip/ccd_sch_033_1920_l_1a_082120.zip"
+    # geocode
+    ,"https://nces.ed.gov/programs/edge/data/EDGE_GEOCODE_PUBLICSCH_1920.zip"
+
     # 2019
-    "https://nces.ed.gov/ccd/data/zip/ccd_sch_029_1819_w_1a_091019.zip"
+    ,"https://nces.ed.gov/ccd/data/zip/ccd_sch_029_1819_w_1a_091019.zip"
     ,"https://nces.ed.gov/ccd/data/zip/ccd_sch_052_1819_l_1a_091019.zip"
     ,"https://nces.ed.gov/ccd/data/zip/ccd_sch_059_1819_l_1a_091019.zip"
     ,"https://nces.ed.gov/ccd/data/zip/ccd_sch_129_1819_w_1a_091019.zip"
@@ -42,7 +64,7 @@ urls = [
     ,"https://nces.ed.gov/ccd/Data/zip/ccd_sch_033_1617_l_2a_11212017_csv.zip"
     # geocode
     ,"https://nces.ed.gov/programs/edge/data/EDGE_GEOCODE_PUBLICSCH_1617.zip"
-    
+
     # 2016
     ,"https://nces.ed.gov/ccd/Data/zip/ccd_sch_029_1516_w_2a_011717_csv.zip"
     ,"https://nces.ed.gov/ccd/Data/zip/ccd_sch_052_1516_w_2a_011717_csv.zip"
