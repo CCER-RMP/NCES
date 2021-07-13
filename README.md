@@ -26,8 +26,9 @@ nces:
       threads: 1
       database: "database"
       schema: "main"
-      schemas_and_paths: "main=C:/Users/jchiu/NCES/database/nces.db"
-      schema_directory: "main=C:/Users/jchiu/NCES"
+      schemas_and_paths:
+        main: "C:/Users/jchiu/NCES/database/nces.db"
+      schema_directory: "C:/Users/jchiu/NCES"
 
   target: dev
 ```
