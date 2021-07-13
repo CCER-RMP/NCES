@@ -35,12 +35,12 @@ nces:
 Run this in PowerShell:
 
 ```sh
-#  change to repo dir
-cd ~/whenever_this_repo_is
-
 # create a virtualenv and activate it
-python -m venv env
-.\env\Scripts\activate.ps1
+python -m venv $HOME\NCES_env
+. $HOME\NCES_env\Scripts\activate.ps1
+
+#  change to repo dir
+cd $HOME\NCES
 
 # install packages
 pip install -r requirements.txt
